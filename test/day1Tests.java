@@ -9,6 +9,12 @@ public class day1Tests {
         Assertions.assertEquals(3, actual);
     }
 
+    @Test
+    public void parseNegativeLine() {
+        int actual = parseLine("-2");
+        Assertions.assertEquals(-2, actual);
+    }
+
 
     private int parseLine(String number) {
         return Integer.parseInt(number);
