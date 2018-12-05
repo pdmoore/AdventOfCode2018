@@ -1,0 +1,79 @@
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class day3 {
+    public static int solution_1(List<String> claims) {
+
+        String[][] squares = new String[1500][1500];
+        List<String> intactClaims = new ArrayList<>();
+
+        for (String eachClaim :
+                claims) {
+
+            Claim claim = parseClaim(eachClaim);
+            intactClaims.add(claim.claimId);
+
+            for (int i = claim.upperLeftX; i < claim.upperLeftX + claim.width; i++) {
+                for (int j = claim.upperLeftY; j < claim.upperLeftY + claim.height; j++) {
+                    if (squares[i][j] == null) {
+                        squares[i][j] = claim.claimId;
+                    } else {
+                        String overlapsWith = squares[i][j];
+                        intactClaims.remove(overlapsWith);
+                        intactClaims.remove(claim.claimId);
+
+                        squares[i][j] = "X";
+                    }
+                }
+            }
+        }
+
+        System.out.println(intactClaims);
+
+        return findOverlap(squares);
+    }
+
+    public static Claim parseClaim(String claim) {
+        String elements[] = claim.split("\\s|@|,|:");
+
+        String claimId = elements[0];
+        int upperLeftX = Integer.parseInt(elements[3]);
+        int upperLeftY = Integer.parseInt(elements[4]);
+
+        String area[] = elements[6].split("x");
+        int width  = Integer.parseInt(area[0]);
+        int height = Integer.parseInt(area[1]);
+
+        return new Claim(claimId,
+                         upperLeftX, upperLeftY,
+                         width, height);
+    }
+
+    static int findOverlap(String[][] squares) {
+        int overlapCount = 0;
+        for (int i = 0; i < squares.length; i++) {
+            for (int j = 0; j < squares[0].length; j++) {
+                if ((null != squares[i][j]) && squares[i][j].equals("X")) overlapCount++;
+            }
+        }
+        return overlapCount;
+    }
+
+    public static int solution_1(String filename) {
+        List<String> claims = new ArrayList<>();
+        try {
+            File f = new File(filename);
+            Scanner scanner = new Scanner(f);
+
+            while (scanner.hasNext()) {
+                claims.add(scanner.nextLine());
+            }
+        } catch(Exception err){
+            err.printStackTrace();
+        }
+
+        return solution_1(claims);
+    }
+}
