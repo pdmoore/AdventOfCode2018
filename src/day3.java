@@ -4,9 +4,24 @@ import java.util.List;
 import java.util.Scanner;
 
 public class day3 {
-    public static int solution_1(List<String> claims) {
+    public static int solution_1(String filename) {
+        List<String> claims = new ArrayList<>();
+        try {
+            File f = new File(filename);
+            Scanner scanner = new Scanner(f);
 
-        String[][] squares = new String[1500][1500];
+            while (scanner.hasNext()) {
+                claims.add(scanner.nextLine());
+            }
+        } catch(Exception err){
+            err.printStackTrace();
+        }
+
+        return solution_1(claims);
+    }
+
+    public static int solution_1(List<String> claims) {
+        String[][] squares = new String[1000][1000];
         List<String> intactClaims = new ArrayList<>();
 
         for (String eachClaim :
@@ -30,6 +45,7 @@ public class day3 {
             }
         }
 
+        // @TODO - wrap the unique claim ID and the overlap area in a return parameter,then assert for both
         System.out.println(intactClaims);
 
         return findOverlap(squares);
@@ -59,21 +75,5 @@ public class day3 {
             }
         }
         return overlapCount;
-    }
-
-    public static int solution_1(String filename) {
-        List<String> claims = new ArrayList<>();
-        try {
-            File f = new File(filename);
-            Scanner scanner = new Scanner(f);
-
-            while (scanner.hasNext()) {
-                claims.add(scanner.nextLine());
-            }
-        } catch(Exception err){
-            err.printStackTrace();
-        }
-
-        return solution_1(claims);
     }
 }

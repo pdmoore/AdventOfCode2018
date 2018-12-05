@@ -1,7 +1,5 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,8 +21,6 @@ public class day3Tests {
     public void solution_1_testFile() {
         assertEquals(104126, day3.solution_1("data/aoc18.3.txt"));
     }
-
-
 
     @Test
     public void parseClaim() {
@@ -52,5 +48,4 @@ public class day3Tests {
 
         assertEquals(4, day3.findOverlap(squares));
     }
-
 }
