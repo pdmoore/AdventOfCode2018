@@ -1,21 +1,9 @@
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class day3 {
     public static int solution_1(String filename) {
-        List<String> claims = new ArrayList<>();
-        try {
-            File f = new File(filename);
-            Scanner scanner = new Scanner(f);
-
-            while (scanner.hasNext()) {
-                claims.add(scanner.nextLine());
-            }
-        } catch(Exception err){
-            err.printStackTrace();
-        }
+        List<String> claims = utilities.getFileContentsAsStrings(filename);
 
         return solution_1(claims);
     }
