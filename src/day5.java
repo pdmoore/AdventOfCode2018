@@ -3,12 +3,14 @@ public class day5 {
     public static int solution_1(String filename) {
         String input = utilities.fileAsString(filename);
 
-        int length = input.length();
-        String lastChars = input.substring(length - 10);
-
         String result = reduceAlgorithmByReplaceFirst(input);
-        System.out.println(result);
         return result.length();
+    }
+
+    public static int solution_2(String filename) {
+        String input = utilities.fileAsString(filename);
+
+        return findSmallestReduction(input);
     }
 
     public static String reduceAlgorithmByReplaceFirst(String input) {
@@ -83,4 +85,22 @@ public class day5 {
 
         return -1;
     }
+
+    public static int findSmallestReduction(String input) {
+        String reduced = reduceAlgorithmByReplaceFirst(input);
+
+        int smallest = Integer.MAX_VALUE;
+        for (char c = 'a'; c <= 'z' ; c++) {
+            String characterToRemove = String.format("%c", c);
+            String nowTry = reduced.replaceAll(characterToRemove, "");
+            nowTry = nowTry.replaceAll(characterToRemove.toUpperCase(), "");
+            String afterSecondReduction = reduceAlgorithmByReplaceFirst(nowTry);
+            if (afterSecondReduction.length() < smallest) {
+                smallest = afterSecondReduction.length();
+            }
+        }
+
+        return smallest;
+    }
+
 }

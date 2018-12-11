@@ -59,7 +59,20 @@ public class day5Tests {
     }
 
     @Test
+    @Disabled
     public void solution_1_testFile() {
         assertEquals(9900, day5.solution_1("data/aoc18.5.txt"));
     }
+
+    @Test
+    public void smallestByRemovingOne() {
+        String input = "dabAcCaCBAcCcaDA";
+        Assertions.assertEquals(4, day5.findSmallestReduction(input));
+    }
+
+    @Test
+    public void solution_2_testFile() {
+        assertEquals(4992, day5.solution_2("data/aoc18.5.txt"));
+    }
+
 }
