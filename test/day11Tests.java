@@ -2,9 +2,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class day11Tests {
+
+    public static final int GRID_SERIAL_NUMBER = 1133;
 
     @Test
     public void calculatePowerLevel() {
@@ -48,9 +51,9 @@ public class day11Tests {
     @Test
     public void day11_solution1() {
         int[][] fuelCells = new int[301][301];
-        day11.populateFuelCells(fuelCells, 1133);  // serial number = puzzle input
+        day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);
 
-        Point2D actual = day11.findLargestTotalPower(fuelCells);
+        Point actual = day11.findLargestTotalPower(fuelCells);
         Assertions.assertEquals(235, actual.getX());
         Assertions.assertEquals(14, actual.getY());
     }
@@ -59,7 +62,7 @@ public class day11Tests {
     @Disabled("really slow")
     public void day11_solution2() {
         int[][] fuelCells = new int[301][301];
-        day11.populateFuelCells(fuelCells, 1133);  // serial number = puzzle input
+        day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);
 
         day11.findLargestTotalPowerOfAllGrids(fuelCells);
     }

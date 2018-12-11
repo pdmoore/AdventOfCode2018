@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class day11 {
@@ -34,7 +35,7 @@ public class day11 {
         }
     }
 
-    public static Point2D findLargestTotalPower(int[][] fuelCells) {
+    public static Point findLargestTotalPower(int[][] fuelCells) {
         int sum3x3 = Integer.MIN_VALUE;
         int upperLeft_x = 0;
         int upperLeft_y = 0;
@@ -52,7 +53,8 @@ public class day11 {
         }
 
         System.out.println("x: " + upperLeft_x + "     y: " + upperLeft_y );
-        return null;
+        Point result = new Point(upperLeft_x, upperLeft_y);
+        return result;
     }
 
     public static int calcSum(int[][] fuelCells, int start_x, int start_y) {
