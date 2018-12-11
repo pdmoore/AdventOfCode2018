@@ -54,4 +54,13 @@ public class day11Tests {
         Assertions.assertEquals(0, actual.getX());
         Assertions.assertEquals(0, actual.getY());
     }
+
+    @Test
+    public void day11_solution2() {
+        int[][] fuelCells = new int[301][301];
+        day11.populateFuelCells(fuelCells, 1133);  // serial number = puzzle input
+
+        day11.findLargestTotalPowerOfAllGrids(fuelCells);
+
+    }
 }

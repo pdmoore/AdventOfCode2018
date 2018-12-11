@@ -65,4 +65,42 @@ public class day11 {
 
         return totalPower;
     }
+
+    private static int calcSum(int[][] fuelCells, int start_x, int start_y, int gridSize) {
+        int totalPower = 0;
+        for (int y = start_y; y < start_y + gridSize; y++) {
+            for (int x = start_x; x < start_x + gridSize; x++) {
+                totalPower += fuelCells[x][y];
+            }
+        }
+
+        return totalPower;
+    }
+
+
+    public static void findLargestTotalPowerOfAllGrids(int[][] fuelCells) {
+        int sum3x3 = Integer.MIN_VALUE;
+        int upperLeft_x = 0;
+        int upperLeft_y = 0;
+        int bestGridSize = -1;
+
+        for (int gridSize = 1; gridSize <= 300 ; gridSize++) {
+System.out.println("checking gridsize: " + gridSize + " -- best so far: " + bestGridSize);
+            for (int y = 1; y < fuelCells.length - gridSize; y++) {
+                for (int x = 1; x < fuelCells[0].length - gridSize; x++) {
+
+                    int currentSum = calcSum(fuelCells, x, y, gridSize);
+                    if (currentSum > sum3x3) {
+                        sum3x3 = currentSum;
+                        upperLeft_x = x;
+                        upperLeft_y = y;
+                        bestGridSize = gridSize;
+                    }
+                }
+            }
+        }
+
+        System.out.println("x: " + upperLeft_x + "     y: " + upperLeft_y + "    gridSize :" + bestGridSize);
+    }
+
 }
