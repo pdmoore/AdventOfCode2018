@@ -1,11 +1,7 @@
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class day5 {
 
     public static int solution_1(String filename) {
-        String input = fileAsString(filename);
+        String input = utilities.fileAsString(filename);
 
         int length = input.length();
         String lastChars = input.substring(length - 10);
@@ -13,16 +9,6 @@ public class day5 {
         String result = reduceAlgorithmByReplaceFirst(input);
         System.out.println(result);
         return result.length();
-    }
-
-    private static String fileAsString(String filename) {
-        try {
-            byte[] encoded = Files.readAllBytes(Paths.get(filename));
-            return new String(encoded).trim();
-        } catch (IOException e) {
-            System.out.println("ERROR reading " + filename);
-        }
-        return null;
     }
 
     public static String reduceAlgorithmByReplaceFirst(String input) {
