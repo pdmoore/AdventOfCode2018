@@ -56,14 +56,7 @@ public class day11 {
     }
 
     public static int calcSum(int[][] fuelCells, int start_x, int start_y) {
-        int totalPower = 0;
-        for (int y = start_y; y < start_y + 3; y++) {
-            for (int x = start_x; x < start_x + 3; x++) {
-                totalPower += fuelCells[x][y];
-            }
-        }
-
-        return totalPower;
+        return calcSum(fuelCells, start_x, start_y, 3);
     }
 
     private static int calcSum(int[][] fuelCells, int start_x, int start_y, int gridSize) {

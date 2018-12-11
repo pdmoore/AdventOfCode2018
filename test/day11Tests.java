@@ -51,16 +51,16 @@ public class day11Tests {
         day11.populateFuelCells(fuelCells, 1133);  // serial number = puzzle input
 
         Point2D actual = day11.findLargestTotalPower(fuelCells);
-        Assertions.assertEquals(0, actual.getX());
-        Assertions.assertEquals(0, actual.getY());
+        Assertions.assertEquals(235, actual.getX());
+        Assertions.assertEquals(14, actual.getY());
     }
 
     @Test
+    @Disabled("really slow")
     public void day11_solution2() {
         int[][] fuelCells = new int[301][301];
         day11.populateFuelCells(fuelCells, 1133);  // serial number = puzzle input
 
         day11.findLargestTotalPowerOfAllGrids(fuelCells);
-
     }
 }
