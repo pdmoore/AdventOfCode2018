@@ -1,9 +1,9 @@
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class day11Tests {
 
@@ -17,20 +17,20 @@ public class day11Tests {
 
         int actual = day11.calculatePowerLevel(x, y, serialNumber);
 
-        Assertions.assertEquals(4, actual);
+        assertEquals(4, actual);
 
-        Assertions.assertEquals(-5, day11.calculatePowerLevel(122, 79, 57));
-        Assertions.assertEquals(0, day11.calculatePowerLevel(217, 196, 39));
-        Assertions.assertEquals(4, day11.calculatePowerLevel(101, 153, 71));
+        assertEquals(-5, day11.calculatePowerLevel(122, 79, 57));
+        assertEquals(0, day11.calculatePowerLevel(217, 196, 39));
+        assertEquals(4, day11.calculatePowerLevel(101, 153, 71));
     }
 
     @Test
     public void hundredsDigit() {
-        Assertions.assertEquals(0, day11.hundredsDigitOf(4));
-        Assertions.assertEquals(0, day11.hundredsDigitOf(89));
-        Assertions.assertEquals(9, day11.hundredsDigitOf(949));
-        Assertions.assertEquals(3, day11.hundredsDigitOf(2345));
-        Assertions.assertEquals(6, day11.hundredsDigitOf(12645));
+        assertEquals(0, day11.hundredsDigitOf(4));
+        assertEquals(0, day11.hundredsDigitOf(89));
+        assertEquals(9, day11.hundredsDigitOf(949));
+        assertEquals(3, day11.hundredsDigitOf(2345));
+        assertEquals(6, day11.hundredsDigitOf(12645));
     }
 
     @Test
@@ -44,7 +44,7 @@ public class day11Tests {
         };
 
         int actual = day11.calcSum(input, 1, 1);
-        Assertions.assertEquals(29, actual);
+        assertEquals(29, actual);
     }
 
 
@@ -54,8 +54,8 @@ public class day11Tests {
         day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);
 
         Point actual = day11.findLargestTotalPower(fuelCells);
-        Assertions.assertEquals(235, actual.getX());
-        Assertions.assertEquals(14, actual.getY());
+        assertEquals(235, actual.getX());
+        assertEquals(14, actual.getY());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class day11Tests {
         day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);
 
         day11.Day11Result actual = day11.findLargestTotalPowerOfAllGrids(fuelCells);
-        Assertions.assertEquals(237, actual.upperLeft.getX());
-        Assertions.assertEquals(227, actual.upperLeft.getY());
-        Assertions.assertEquals(14, actual.size);
+        assertEquals(237, actual.upperLeft.getX());
+        assertEquals(227, actual.upperLeft.getY());
+        assertEquals(14, actual.size);
     }
 }
