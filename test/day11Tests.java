@@ -59,7 +59,7 @@ public class day11Tests {
     }
 
     @Test
-    @Disabled("really slow")
+    @Disabled("not included in unit suite, really slow")
     public void day11_solution2() {
         int[][] fuelCells = new int[301][301];
         day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);

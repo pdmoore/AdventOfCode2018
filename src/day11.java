@@ -52,7 +52,6 @@ public class day11 {
             }
         }
 
-        System.out.println("x: " + upperLeft_x + "     y: " + upperLeft_y );
         Point result = new Point(upperLeft_x, upperLeft_y);
         return result;
     }
