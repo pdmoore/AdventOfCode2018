@@ -59,11 +59,14 @@ public class day11Tests {
     }
 
     @Test
-    @Disabled("not included in unit suite, really slow")
     public void day11_solution2() {
+        // Solution is painfully slow....
         int[][] fuelCells = new int[301][301];
         day11.populateFuelCells(fuelCells, GRID_SERIAL_NUMBER);
 
-        day11.findLargestTotalPowerOfAllGrids(fuelCells);
+        day11.Day11Result actual = day11.findLargestTotalPowerOfAllGrids(fuelCells);
+        Assertions.assertEquals(237, actual.upperLeft.getX());
+        Assertions.assertEquals(227, actual.upperLeft.getY());
+        Assertions.assertEquals(14, actual.size);
     }
 }

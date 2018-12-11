@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.geom.Point2D;
 
 public class day11 {
 
@@ -72,14 +71,14 @@ public class day11 {
     }
 
 
-    public static void findLargestTotalPowerOfAllGrids(int[][] fuelCells) {
+    public static Day11Result findLargestTotalPowerOfAllGrids(int[][] fuelCells) {
         int sum3x3 = Integer.MIN_VALUE;
         int upperLeft_x = 0;
         int upperLeft_y = 0;
         int bestGridSize = -1;
 
         for (int gridSize = 1; gridSize <= 300 ; gridSize++) {
-System.out.println("checking gridsize: " + gridSize + " -- best so far: " + bestGridSize);
+            //System.out.println("checking gridsize: " + gridSize + " -- best so far: " + bestGridSize);
             for (int y = 1; y < fuelCells.length - gridSize; y++) {
                 for (int x = 1; x < fuelCells[0].length - gridSize; x++) {
 
@@ -95,6 +94,19 @@ System.out.println("checking gridsize: " + gridSize + " -- best so far: " + best
         }
 
         System.out.println("x: " + upperLeft_x + "     y: " + upperLeft_y + "    gridSize :" + bestGridSize);
+
+        Day11Result result = new Day11Result(upperLeft_x, upperLeft_y, bestGridSize);
+        return result;
     }
 
+    public static class Day11Result {
+        public final int size;
+        public final Point upperLeft;
+
+
+        public Day11Result(int upperLeft_x, int upperLeft_y, int bestGridSize) {
+            upperLeft = new Point(upperLeft_x, upperLeft_y);
+            this.size = bestGridSize;
+        }
+    }
 }
