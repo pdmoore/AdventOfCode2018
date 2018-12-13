@@ -125,16 +125,6 @@ public class day12Tests {
     }
 
     @Test
-    @Disabled
-    public void something() {
-        String input = "initial state: ##..#..##.#....##.#..#.#.##.#.#.######..##.#.#.####.#..#...##...#....#....#.##.###..#..###...#...#..";
-        String prefix = "..........";
-        String expected = prefix + "##..#..##.#....##.#..#.#.##.#.#.######..##.#.#.####.#..#...##...#....#....#.##.###..#..###...#...#..";
-        String actual = day12.parseInitialState(input, prefix);
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void day12_solution1() {
         String filename = "data/aoc18.12.txt";
 
