@@ -5,6 +5,7 @@ import java.util.List;
 
 public class day13 {
 
+    public static boolean removeCollidingCarts = false;
     private static int tick = 0;
 
     public static class Cart {
@@ -126,13 +127,27 @@ public class day13 {
 
     private static void areThereTwoCartsAt(int x, int y, List<Cart> carts) {
         int cartDetectedAt = 0;
+        Cart firstCart = null;
         for (Cart cart :
                 carts) {
             if (cart.x == x && cart.y == y) {
                 cartDetectedAt++;
+                if (firstCart == null) {
+                    firstCart = cart;
+                }
 
                 if (cartDetectedAt == 2) {
-                    throw new RuntimeException("boom - x: " + x + "  y: " + y);
+                    if (removeCollidingCarts) {
+                        carts.remove(firstCart);
+                        carts.remove(cart);
+                        if (carts.size() == 1) {
+                            Cart lastCart = carts.get(0);
+                            throw new RuntimeException("last - x: " + lastCart.x + "  y: " + lastCart.y + "dir: " + lastCart.orientation);
+                        }
+                        return;
+                    } else {
+                        throw new RuntimeException("boom - x: " + x + "  y: " + y);
+                    }
                 }
             }
         }

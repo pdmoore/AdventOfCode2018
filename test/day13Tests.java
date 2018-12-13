@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -124,7 +125,10 @@ public class day13Tests {
     }
 
     @Test
+    @Disabled
     public void ManyTicks_MoveRight_MoveDownIntersection() {
+        day13.removeCollidingCarts = false;
+
         String filename = "data/aoc18.13a.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
         char[][] map = day13.convertInputToMap(inputAsStrings);
@@ -175,6 +179,7 @@ public class day13Tests {
 
 
     @Test
+    @Disabled
     public void day13_solution1() {
         String filename = "data/aoc18.13.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
@@ -192,8 +197,33 @@ public class day13Tests {
         }
     }
 
+    @Test
+    public void day13_example2_removeCarts() {
+        String filename = "data/aoc18.13.txt";
+        List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
+        char[][] map = day13.convertInputToMap(inputAsStrings);
+
+        List<day13.Cart> carts = day13.extractCartsFromMap(map);
+        day13.removeCollidingCarts = true;
+
+        while (true) {
+            try {
+                day13.tick(map, carts);
+            } catch (Exception e) {
+                e.printStackTrace();
+                assertEquals("remove test", e.getMessage());
+            }
+        }
+    }
+
+    private void dumpCarts(List<day13.Cart> carts) {
+        for (day13.Cart cart :
+                carts) {
+            System.out.println(dumpCart(cart));
+        }
+    }
+
     private String dumpCart(day13.Cart cart) {
         return String.format("y: %4d   x: %4d   dir: %s\n", cart.y, cart.x, cart.orientation);
     }
-
 }
