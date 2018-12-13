@@ -57,17 +57,19 @@ public class day12 {
     }
 
     public static int solution1(String filename) {
+        return calcGenerations(filename, 20);
+    }
+
+    private static int calcGenerations(String filename, int reps) {
         // read file as list of strings
         List<String> fileContentsAsStrings = utilities.getFileContentsAsStrings(filename);
 
         // parse initial state
-        String prefix = "..................................................";
-//        String prefix = "...";
+        String prefix = "........................";
         List<String> replay = new ArrayList<>();
-        replay.add(addCalibraton(prefix));
+//        replay.add(addCalibraton(prefix));
 
         String currentState = parseInitialState(fileContentsAsStrings.get(0), prefix);
-        currentState += prefix;
 
         // parse rules
         HashMap<String, String> rules = parseRules(fileContentsAsStrings.subList(2, fileContentsAsStrings.size()));
@@ -75,8 +77,11 @@ public class day12 {
         String previousLine = currentState;
 
         // do 20 times
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < reps; i++) {
             replay.add(previousLine);
+            if (previousLine.substring(previousLine.length() - RULE_LENGTH).contains("#")) {
+                previousLine += ".....";
+            }
 
             StringBuilder nextLine = new StringBuilder();
             nextLine.append("..");
@@ -89,13 +94,26 @@ public class day12 {
             previousLine = nextLine.toString();
         }
 
-        for (String line :
-                replay) {
-            System.out.println(line);
-        }
+//        printResults(replay, prefix.length());
 
         // after 20 times, potSum of the entire string and the zero index (prefix length)
         return potSum(previousLine, prefix.length());
     }
 
+    private static void printResults(List<String> replay, int zeroIndex) {
+        int i = 0;
+        int prevSum = 0;
+        for (String line :
+                replay) {
+            int lineSum = potSum(line, zeroIndex);
+            int delta = lineSum - prevSum;
+            String output = String.format("%d: %d  :%d", i++, lineSum, delta);
+            System.out.println(output);
+            prevSum = lineSum;
+        }
+    }
+
+    public static int solution1(String filename, int reps) {
+        return calcGenerations(filename, reps);
+    }
 }

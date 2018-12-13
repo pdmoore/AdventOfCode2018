@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -125,6 +126,16 @@ public class day12Tests {
     }
 
     @Test
+    @Disabled
+    public void day12_solution1_sample() {
+        String filename = "data/aoc18.12a.txt";
+
+        int result = day12.solution1(filename);
+        assertEquals(325, result);
+    }
+
+    @Test
+    @Disabled
     public void day12_solution1() {
         String filename = "data/aoc18.12.txt";
 
@@ -133,10 +144,31 @@ public class day12Tests {
     }
 
     @Test
-    public void day12_solution1_sample() {
-        String filename = "data/aoc18.12a.txt";
+    public void day12_solution2_patterns() {
+        String filename = "data/aoc18.12.txt";
 
-        int result = day12.solution1(filename);
-        assertEquals(325, result);
+        int result = day12.solution1(filename, 200);
+        assertEquals(6655, result);
     }
+
+    @Test
+    public void day12_solution2() {
+        assertEquals(          6655, calcAnswerForDay(        200));
+        assertEquals(         16555, calcAnswerForDay(        500));
+        assertEquals(        165055, calcAnswerForDay(       5000));
+        assertEquals(       1650055, calcAnswerForDay(      50000));
+        assertEquals(      16500055, calcAnswerForDay(     500000));
+//        assertEquals( 1650000000055, calcAnswerForDay(50000000000));
+
+    }
+
+    private int calcAnswerForDay(int dayTarget) {
+        int generationStable = 159;
+        int sumOnStable = 5302;
+        int delta_per_generation = 33;
+        int span = dayTarget - generationStable;
+        return sumOnStable + (span * 33);
+    }
+
+
 }
