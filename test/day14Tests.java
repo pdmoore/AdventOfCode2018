@@ -148,7 +148,7 @@ public class day14Tests {
         List<Integer> resultingScores = day14.createRecipes(recipeScores, 70000);
         assertEquals(90828, resultingScores.size());
 
-        int actual = day12.solution2(resultingScores, "084601");
+        int actual = day14.solution2(resultingScores, "084601");
 
         assertEquals(-99, actual);
     }

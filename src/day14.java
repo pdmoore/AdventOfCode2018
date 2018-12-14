@@ -57,4 +57,7 @@ public class day14 {
         return sb.toString();
     }
 
+    public static int solution2(List<Integer> resultingScores, String s) {
+        return 0;
+    }
 }
