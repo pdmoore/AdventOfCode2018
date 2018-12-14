@@ -116,4 +116,8 @@ public class day12 {
     public static int solution1(String filename, int reps) {
         return calcGenerations(filename, reps);
     }
+
+    public static int solution2(List<Integer> resultingScores, String s) {
+        return 0;
+    }
 }
