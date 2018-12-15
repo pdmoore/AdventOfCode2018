@@ -126,31 +126,45 @@ public class day14Tests {
     }
 
     @Test
+    @Disabled
     public void solution1() {
         List<Integer> recipeScores = new ArrayList<>();
         recipeScores.add(3);
         recipeScores.add(7);
 
-        List<Integer> resultingScores = day14.createRecipes(recipeScores, 70000);
-        assertEquals(90828, resultingScores.size());
+        List<Integer> resultingScores = day14.createRecipes(recipeScores, 68000);
+        assertEquals(88208, resultingScores.size());
         String actual = day14.answer(resultingScores, 84601);
 
         assertEquals("2688510125", actual);
     }
 
     @Test
-    @Disabled
     public void solution2() {
         List<Integer> recipeScores = new ArrayList<>();
         recipeScores.add(3);
         recipeScores.add(7);
 
-        List<Integer> resultingScores = day14.createRecipes(recipeScores, 70000);
-        assertEquals(90828, resultingScores.size());
+        List<Integer> resultingScores = day14.createRecipes(recipeScores, 2000000);
 
         int actual = day14.solution2(resultingScores, "084601");
 
-        assertEquals(-99, actual);
+        assertEquals(20188250, actual);
+    }
+
+
+    @Test
+    public void solution2_example() {
+        List<Integer> recipeScores = new ArrayList<>();
+        recipeScores.add(3);
+        recipeScores.add(7);
+
+        List<Integer> resultingScores = day14.createRecipes(recipeScores, 2000);
+
+        assertEquals(9, day14.solution2(resultingScores, "51589"));
+        assertEquals(5, day14.solution2(resultingScores, "01245"));
+        assertEquals(18, day14.solution2(resultingScores, "92510"));
+        assertEquals(2018, day14.solution2(resultingScores, "59414"));
     }
 
 

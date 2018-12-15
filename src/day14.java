@@ -58,6 +58,11 @@ public class day14 {
     }
 
     public static int solution2(List<Integer> resultingScores, String s) {
-        return 0;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < resultingScores.size(); i++) {
+            sb.append(resultingScores.get(i));
+        }
+
+        return sb.toString().indexOf(s);
     }
 }
