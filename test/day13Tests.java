@@ -224,6 +224,6 @@ public class day13Tests {
     }
 
     private String dumpCart(day13.Cart cart) {
-        return String.format("y: %4d   x: %4d   dir: %s\n", cart.y, cart.x, cart.orientation);
+        return String.format("col: %4d   row: %4d   dir: %s\n", cart.y, cart.x, cart.orientation);
     }
 }

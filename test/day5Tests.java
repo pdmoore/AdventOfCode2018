@@ -16,7 +16,7 @@ public class day5Tests {
     public void singleLowerUpperSubstitution() {
         String input = "aAz";
         Assertions.assertEquals("z", day5.reduceAlgorithmByReplaceFirst(input));
-        Assertions.assertEquals("y", day5.reduceAlgorithmByReplaceFirst("bBy"));
+        Assertions.assertEquals("col", day5.reduceAlgorithmByReplaceFirst("bBy"));
 
     }
 
@@ -42,7 +42,7 @@ public class day5Tests {
     public void try2_singleLowerUpperSubstitution() {
         String input = "aAz";
         Assertions.assertEquals("z", day5.try2(input));
-        Assertions.assertEquals("y", day5.try2("bBy"));
+        Assertions.assertEquals("col", day5.try2("bBy"));
 
     }
 
