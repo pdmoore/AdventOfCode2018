@@ -14,9 +14,10 @@ public class day15Tests {
     // battle logic
     //  - target selection when more than one
     //  - attack
+    // movement logic
+
     // end of game detection
     // scoring at the end
-    // movement logic
 
     // character array # . E G
     // list of goblins
@@ -40,7 +41,6 @@ public class day15Tests {
 
         assertEquals(3, day15.elfCount());
         assertEquals(2, day15.goblinCount());
-
     }
 
     @Test
@@ -55,8 +55,25 @@ public class day15Tests {
         day15.combat();
 
         assertEquals(134, day15.result());
-
     }
+
+
+    @Test
+    public void Attack_PickWeakestFoe() {
+        char[][] map = new char[][] {
+                {'#', '#', '#', '#', '#' },
+                {'#', 'G', 'E', '.', '#' },
+                {'#', 'E', 'G', 'E', '#' },
+                {'#', '.', 'E', '.', '#' },
+                {'#', '#', '#', '#', '#' },
+        };
+
+        Day15 day15 = new Day15(map);
+        day15.combat();
+
+        assertEquals(20298, day15.result());
+    }
+
 
     private class Day15 {
         char[][] map;
@@ -105,25 +122,92 @@ public class day15Tests {
         }
 
         public void combat() {
-
-//@TODO - do this as nested for loops within the while loop
-            // Detect who to beat up on based on who is adjacent to unit
-
             while (keepFighting()) {
                 rounds++;
 
-                // need to scan row by col
+                for (int row = 0; row < map.length; row++) {
+                    for (int col = 0; col < map[0].length; col++) {
+                        char whoIs = map[row][col];
+                        if (whoIs == 'E') {
 
-                Unit elf = units.get(0);
-                Unit goblin = units.get(1);
+                            Unit elf = getUnitAt(row, col);
 
-                attackOn(goblin);
-                if (goblinCount == 0) break;
+                            Unit goblin = getWeakestAdjacentFoe(elf);
+                            if (goblin != null) {
+                                attackOn(goblin);
+                                if (!keepFighting()) return;
+                            } else {
 
-                attackOn(elf);
-                if (elfCount == 0) break;
+                                // otherwise move towards nearest foe
+                            }
+                        } else if (whoIs == 'G') {
 
+                            Unit goblin = getUnitAt(row, col);
+
+                            Unit elf = getWeakestAdjacentFoe(goblin);
+                            if (elf != null) {
+                                attackOn(elf);
+                                if (!keepFighting()) return;
+                            } else {
+                                // otherwise move towards nearest foe
+                            }
+                        }
+                    }
+                }
             }
+        }
+
+        // @TODO - flesh out all the rules
+        // ignore null adjacents
+        // affirm adjacent is foe
+        // return lowest hp of those guys
+        private Unit getWeakestAdjacentFoe(Unit unit) {
+
+            // Puzzle input provides a border on all sides, no need to check for out-of-bounds exceptions
+
+            List<Unit> foes = new ArrayList<>();
+
+            Unit unitAbove = getUnitAt(unit.row - 1, unit.col);
+            if (unitAbove != null && unitAbove.isFoeOf(unit)) foes.add(unitAbove);
+
+            Unit unitLeft = getUnitAt(unit.row, unit.col - 1);
+            if (unitLeft != null && unitLeft.isFoeOf(unit))  foes.add(unitLeft);
+
+            Unit unitRight = getUnitAt(unit.row, unit.col + 1);
+            if (unitRight != null && unitRight.isFoeOf(unit)) foes.add(unitRight);
+
+            Unit unitBelow = getUnitAt(unit.row + 1, unit.col);
+            if (unitBelow != null && unitBelow.isFoeOf(unit)) foes.add(unitBelow);
+
+            if (foes.size() == 0) return null;
+
+//            if (unit.isElf()) return unitRight;
+//            if (unit.isGoblin()) return unitLeft;
+
+            return weakestFoe(foes);
+        }
+
+        private Unit weakestFoe(List<Unit> foes) {
+            Unit weakestFoe = null;
+            for (Unit foe:
+            foes) {
+                if (weakestFoe == null) {
+                    weakestFoe = foe;
+                } else if (foe.hp < weakestFoe.hp) {
+                    weakestFoe = foe;
+                }
+            }
+
+            return weakestFoe;
+        }
+
+        private Unit getUnitAt(int row, int col) {
+            for (Unit unit :
+                    units) {
+                if (unit.isLocation(row, col)) return unit;
+            }
+
+            return null;
         }
 
         private void attackOn(Unit unit) {
@@ -139,6 +223,9 @@ public class day15Tests {
             } else {
                 elfCount--;
             }
+
+            map[unit.row][unit.col] = '.';
+
             units.remove(unit);
         }
 
@@ -172,8 +259,24 @@ public class day15Tests {
                 hp -= 3;
             }
 
+            public boolean isElf() {
+                return type == 'E';
+            }
+
             public boolean isGoblin() {
                 return type == 'G';
+            }
+
+            public boolean isLocation(int row, int col) {
+                return this.row == row && this.col == col;
+            }
+
+            public boolean isFoeOf(Unit unit) {
+                if (this.isElf()) return unit.isGoblin();
+
+                if (this.isGoblin()) return unit.isElf();
+
+                return false;
             }
         }
     }
