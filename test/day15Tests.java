@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +27,14 @@ public class day15Tests {
     // counter of rounds
 
 
-
     @Test
     public void createMap_oneOfEachCharacter() {
-        char[][] map = new char[][] {
-                {'#', '#', '#', '#', '#' },
-                {'#', '.', 'E', 'G', '#' },
-                {'#', 'G', '.', 'E', '#' },
-                {'#', 'E', '.', '.', '#' },
-                {'#', '#', '#', '#', '#' },
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#'},
+                {'#', '.', 'E', 'G', '#'},
+                {'#', 'G', '.', 'E', '#'},
+                {'#', 'E', '.', '.', '#'},
+                {'#', '#', '#', '#', '#'},
         };
 
         Day15 day15 = new Day15(map);
@@ -45,27 +45,47 @@ public class day15Tests {
 
     @Test
     public void Attack_LeftRight() {
-        char[][] map = new char[][] {
-                {'#', '#', '#', '#', '#' },
-                {'#', '.', 'E', 'G', '#' },
-                {'#', '#', '#', '#', '#' },
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#'},
+                {'#', '.', 'E', 'G', '#'},
+                {'#', '#', '#', '#', '#'},
         };
 
         Day15 day15 = new Day15(map);
         day15.combat();
 
-        assertEquals(134, day15.result());
+        int rounds = 67;
+        int hitpoints_remaining = 2;
+        int expected = rounds * hitpoints_remaining;
+        assertEquals(expected, day15.result());
+    }
+
+    @Test
+    public void Simple_Movement_LeftRight_OneCell() {
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#', '#', '#'},
+                {'#', 'E', '.', '.', '.', 'G', '#'},
+                {'#', '#', '#', '#', '#', '#', '#'},
+        };
+
+        Day15 day15 = new Day15(map);
+        day15.combat();
+
+        int rounds = 68;
+        int hitpoints_remaining = 2;
+        int expected = rounds * hitpoints_remaining;
+        assertEquals(expected, day15.result());
     }
 
 
     @Test
     public void Attack_PickWeakestFoe() {
-        char[][] map = new char[][] {
-                {'#', '#', '#', '#', '#' },
-                {'#', 'G', 'E', '.', '#' },
-                {'#', 'E', 'G', 'E', '#' },
-                {'#', '.', 'E', '.', '#' },
-                {'#', '#', '#', '#', '#' },
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#'},
+                {'#', 'G', 'E', '.', '#'},
+                {'#', 'E', 'G', 'E', '#'},
+                {'#', '.', 'E', '.', '#'},
+                {'#', '#', '#', '#', '#'},
         };
 
         Day15 day15 = new Day15(map);
@@ -74,6 +94,46 @@ public class day15Tests {
         assertEquals(20298, day15.result());
     }
 
+    @Test
+    @Disabled
+    public void exampleWithMovement() {
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#', '#', '#', '#', '#'},
+                {'#', 'G', '.', '.', 'G', '.', '.', 'G', '#'},
+                {'#', '.', '.', '.', '.', '.', '.', '.', '#'},
+                {'#', '.', '.', '.', '.', '.', '.', '.', '#'},
+                {'#', 'G', '.', '.', 'E', '.', '.', 'G', '#'},
+                {'#', '.', '.', '.', '.', '.', '.', '.', '#'},
+                {'#', '.', '.', '.', '.', '.', '.', '.', '#'},
+                {'#', 'G', '.', '.', 'G', '.', '.', 'G', '#'},
+                {'#', '#', '#', '#', '#', '#', '#', '#', '#'}
+        };
+
+        Day15 day15 = new Day15(map);
+        day15.combat();
+
+        assertEquals(-99, day15.result());
+    }
+
+
+    @Test
+    @Disabled
+    public void FullExample() {
+        char[][] map = new char[][]{
+                {'#', '#', '#', '#', '#', '#', '#'},
+                {'#', '.', 'G', '.', '.', '.', '#'},
+                {'#', '.', '.', '.', 'E', 'G', '#'},
+                {'#', '.', '#', '.', '#', 'G', '#'},
+                {'#', '.', '.', 'G', '#', 'E', '#'},
+                {'#', '.', '.', '.', '.', '.', '#'},
+                {'#', '#', '#', '#', '#', '#', '#'},
+        };
+
+        Day15 day15 = new Day15(map);
+        day15.combat();
+
+        assertEquals(27730, day15.result());
+    }
 
     private class Day15 {
         char[][] map;
@@ -92,7 +152,7 @@ public class day15Tests {
 
                     if (map[row][col] == 'E') {
                         addAnElf(row, col);
-                    } else if(map[row][col] == 'G') {
+                    } else if (map[row][col] == 'G') {
                         AddGoblin(row, col);
                     }
                 }
@@ -128,28 +188,27 @@ public class day15Tests {
                 for (int row = 0; row < map.length; row++) {
                     for (int col = 0; col < map[0].length; col++) {
                         char whoIs = map[row][col];
-                        if (whoIs == 'E') {
+                        if (whoIs == 'E' || whoIs == 'G') {
 
-                            Unit elf = getUnitAt(row, col);
+                            Unit unit = getUnitAt(row, col);
+                            if (unit.turnCompleted < rounds) {
 
-                            Unit goblin = getWeakestAdjacentFoe(elf);
-                            if (goblin != null) {
-                                attackOn(goblin);
-                                if (!keepFighting()) return;
-                            } else {
+                                Unit foe = getWeakestAdjacentFoe(unit);
+                                if (foe == null) {
+                                    // execute move - dijkstra's?
+                                    Point moveTo = calculateMove(unit);
+                                    if (moveTo != null) {
+                                        move(unit, moveTo);
+                                    }
+                                }
 
-                                // otherwise move towards nearest foe
-                            }
-                        } else if (whoIs == 'G') {
+                                foe = getWeakestAdjacentFoe(unit);
+                                if (foe != null) {
+                                    attackOn(foe);
+                                    if (!keepFighting()) return;
+                                }
 
-                            Unit goblin = getUnitAt(row, col);
-
-                            Unit elf = getWeakestAdjacentFoe(goblin);
-                            if (elf != null) {
-                                attackOn(elf);
-                                if (!keepFighting()) return;
-                            } else {
-                                // otherwise move towards nearest foe
+                                unit.turnCompleted = rounds;
                             }
                         }
                     }
@@ -157,10 +216,25 @@ public class day15Tests {
             }
         }
 
-        // @TODO - flesh out all the rules
-        // ignore null adjacents
-        // affirm adjacent is foe
-        // return lowest hp of those guys
+        private void move(Unit unit, Point moveTo) {
+            map[unit.row][unit.col] = '.';
+
+            unit.row = moveTo.x;
+            unit.col = moveTo.y;
+
+            map[unit.row][unit.col] = unit.type;
+        }
+
+        private Point calculateMove(Unit unit) {
+            Point moveTo = null;
+            if (unit.type == 'E') {
+                moveTo = new Point(unit.row, unit.col + 1);
+            } else if (unit.type == 'G') {
+                moveTo = new Point(unit.row, unit.col - 1);
+            }
+            return moveTo;
+        }
+
         private Unit getWeakestAdjacentFoe(Unit unit) {
 
             // Puzzle input provides a border on all sides, no need to check for out-of-bounds exceptions
@@ -171,7 +245,7 @@ public class day15Tests {
             if (unitAbove != null && unitAbove.isFoeOf(unit)) foes.add(unitAbove);
 
             Unit unitLeft = getUnitAt(unit.row, unit.col - 1);
-            if (unitLeft != null && unitLeft.isFoeOf(unit))  foes.add(unitLeft);
+            if (unitLeft != null && unitLeft.isFoeOf(unit)) foes.add(unitLeft);
 
             Unit unitRight = getUnitAt(unit.row, unit.col + 1);
             if (unitRight != null && unitRight.isFoeOf(unit)) foes.add(unitRight);
@@ -179,18 +253,13 @@ public class day15Tests {
             Unit unitBelow = getUnitAt(unit.row + 1, unit.col);
             if (unitBelow != null && unitBelow.isFoeOf(unit)) foes.add(unitBelow);
 
-            if (foes.size() == 0) return null;
-
-//            if (unit.isElf()) return unitRight;
-//            if (unit.isGoblin()) return unitLeft;
-
             return weakestFoe(foes);
         }
 
         private Unit weakestFoe(List<Unit> foes) {
             Unit weakestFoe = null;
-            for (Unit foe:
-            foes) {
+            for (Unit foe :
+                    foes) {
                 if (weakestFoe == null) {
                     weakestFoe = foe;
                 } else if (foe.hp < weakestFoe.hp) {
@@ -247,12 +316,14 @@ public class day15Tests {
             public int row;
             public int col;
             public int hp;
+            public int turnCompleted;
 
             public Unit(int row, int col, char type) {
                 this.type = type;
                 this.row = row;
                 this.col = col;
                 this.hp = 200;
+                this.turnCompleted = 0;
             }
 
             public void takeDamage() {
