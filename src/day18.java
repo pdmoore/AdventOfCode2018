@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class day17 {
+public class day18 {
     public static char[][] generateNextMap(char[][] input) {
         char[][] nextGeneration = new char[input.length][input[0].length];
         char itBecomes = 0;

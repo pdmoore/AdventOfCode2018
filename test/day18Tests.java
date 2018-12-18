@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class day17Tests {
+public class day18Tests {
 
     @Test
     public void Open_to_Tree_rule() {
@@ -20,7 +20,7 @@ public class day17Tests {
                 {'.', '.', '.'}
         };
 
-        char[][] actual = day17.generateNextMap(map);
+        char[][] actual = day18.generateNextMap(map);
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -39,7 +39,7 @@ public class day17Tests {
                 {'.', '.', '.'}
         };
 
-        char[][] actual = day17.generateNextMap(map);
+        char[][] actual = day18.generateNextMap(map);
 
         Assertions.assertArrayEquals(expected, actual);
 
@@ -59,7 +59,7 @@ public class day17Tests {
                 {'.', '.', '.'}
         };
 
-        char[][] actual = day17.generateNextMap(map);
+        char[][] actual = day18.generateNextMap(map);
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -81,16 +81,16 @@ public class day17Tests {
         };
 
         int expected = 37 * 31;
-        int actual = day17.result(map);
+        int actual = day18.result(map);
         assertEquals(expected, actual);
     }
 
     @Test
     public void solution1_example() {
         // pass in example file name
-        String filename = "data/aoc18.17a.txt";
+        String filename = "data/aoc18.18a.txt";
 
-        int actual = day17.solution1(filename, 10);
+        int actual = day18.solution1(filename, 10);
 
         int expected = 37 * 31;
         assertEquals(expected, actual);
@@ -99,9 +99,9 @@ public class day17Tests {
     @Test
     public void solution1() {
         // pass in example file name
-        String filename = "data/aoc18.17.txt";
+        String filename = "data/aoc18.18.txt";
 
-        int actual = day17.solution1(filename, 10);
+        int actual = day18.solution1(filename, 10);
 
         int expected = 543312;
         assertEquals(expected, actual);
@@ -114,9 +114,9 @@ public class day17Tests {
         // used excel to get the right answer - need to clean up the code to generate the result for soln2
 
 
-        String filename = "data/aoc18.17.txt";
+        String filename = "data/aoc18.18.txt";
 
-        int actual = day17.solution2(filename, 2000);
+        int actual = day18.solution2(filename, 2000);
 
         int expected = 199064;
         assertEquals(expected, actual);
