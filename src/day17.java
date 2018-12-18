@@ -23,7 +23,7 @@ public class day17 {
                 } else if (acre == '#') {
                     boolean hasTreeAndLumber = isAdjacentToLumberyardAndTrees(input, row, col);
                     if (!hasTreeAndLumber)
-                    itBecomes = '.';
+                        itBecomes = '.';
                 }
 
                 nextGeneration[row][col] = itBecomes;
@@ -75,26 +75,23 @@ public class day17 {
         Collection<Character> acres = new ArrayList();
         for (int row = 0; row < input.length; row++) {
             for (int col = 0; col < input[0].length; col++) {
-                  acres.add(input[row][col]);
+                acres.add(input[row][col]);
             }
         }
 
         int treeCount = Collections.frequency(acres, '|');
         int lumberyardCount = Collections.frequency(acres, '#');
+        int result = treeCount * lumberyardCount;
 
-        return treeCount * lumberyardCount;
+        return result;
     }
 
-    public static int solution1(String filename) {
-        // read file
+    public static int solution1(String filename, int reps) {
         List<String> fileContentsAsStrings = utilities.getFileContentsAsStrings(filename);
         char[][] currentMap = utilities.convertInputToMap(fileContentsAsStrings);
 
-
-
-        // do 1..10 reps
         char[][] nextMap = new char[currentMap.length][currentMap[0].length];
-        for (int i = 1; i <= 10; i++) {
+        for (int i = 1; i <= reps; i++) {
             nextMap = generateNextMap(currentMap);
 
             for (int row = 0; row < nextMap.length; row++) {
@@ -106,4 +103,43 @@ public class day17 {
 
         return result(nextMap);
     }
+
+    public static int solution2(String filename, int reps) {
+        List<String> fileContentsAsStrings = utilities.getFileContentsAsStrings(filename);
+        char[][] currentMap = utilities.convertInputToMap(fileContentsAsStrings);
+
+        System.out.println("step  - trees   lumber   result   ");
+
+        char[][] nextMap = new char[currentMap.length][currentMap[0].length];
+        for (int i = 1; i <= reps; i++) {
+            nextMap = generateNextMap(currentMap);
+
+            for (int row = 0; row < nextMap.length; row++) {
+                for (int col = 0; col < nextMap[0].length; col++) {
+                    currentMap[row][col] = nextMap[row][col];
+                }
+            }
+
+            result(i, nextMap);
+
+        }
+
+        return result(nextMap);
+    }
+
+    private static void result(int rep, char[][] input) {
+        Collection<Character> acres = new ArrayList();
+        for (int row = 0; row < input.length; row++) {
+            for (int col = 0; col < input[0].length; col++) {
+                acres.add(input[row][col]);
+            }
+        }
+
+        int treeCount = Collections.frequency(acres, '|');
+        int lumberyardCount = Collections.frequency(acres, '#');
+        int result = treeCount * lumberyardCount;
+
+        System.out.println(String.format("%5d - %5d   %5d   %5d ", rep, treeCount, lumberyardCount, result));
+    }
 }
+
