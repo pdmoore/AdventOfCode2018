@@ -2,37 +2,34 @@ import java.util.*;
 
 public class day7 {
     public static String solution1(String filename) {
-        // read file as strings
         List<String> inputLines = utilities.getFileContentsAsStrings(filename);
 
-        // build dependencies from string list
         Map<String, List<String>> rules = parseInput(inputLines);
 
-        // calculate step order
-        String stepOrder = calculateStepOrder(rules);
-        return stepOrder;
+        return calculateStepOrder(rules);
     }
 
     private static Map<String, List<String>> parseInput(List<String> inputLines) {
-        Map<String, List<String>> rules = initializeKeys();
+        Map<String, List<String>> rules = new HashMap<>();
 
         for (String inputLine :
                 inputLines) {
             String dependency = String.valueOf(inputLine.charAt(5));
             String key = String.valueOf(inputLine.charAt(36));
 
-            List<String> depends = new ArrayList<String>(rules.get(key));
-            depends.add(dependency);
-            rules.replace(key, depends);
-        }
+            if (rules.containsKey(key)) {
+                List<String> depends = new ArrayList<>(rules.get(key));
+                depends.add(dependency);
+                rules.replace(key, depends);
+            } else {
+                List<String> depends = new ArrayList<>();
+                depends.add(dependency);
+                rules.put(key, depends);
 
-        return rules;
-    }
-
-    private static Map<String, List<String>> initializeKeys() {
-        Map<String, List<String>> rules = new HashMap<>();
-        for (char c = 'A'; c <= 'Z'; c++) {
-            rules.put(Character.toString(c), new ArrayList<>());
+                if (!rules.containsKey(dependency)) {
+                    rules.put(dependency, new ArrayList<>());
+                }
+            }
         }
 
         return rules;
@@ -41,7 +38,6 @@ public class day7 {
     public static String calculateStepOrder(Map<String, List<String>> rules) {
         String stepOrder = "";
 
-        // while there are rules remaining
         while (!rules.keySet().isEmpty()) {
             String readyRule = findKeyWithNoDependency(rules);
 
