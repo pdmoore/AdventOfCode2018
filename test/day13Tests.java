@@ -17,7 +17,7 @@ public class day13Tests {
     public void buildMap_example() {
         String filename = "data/aoc18.13a.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] actual = day13.convertInputToMap(inputAsStrings);
+        char[][] actual = utilities.convertInputToMap(inputAsStrings);
 
         char[][] expected = {
                 { '/',  '-', '>',  '-', '\\', ' ', ' ', ' ',  ' ', ' ',  ' ', ' ', ' '},
@@ -35,7 +35,7 @@ public class day13Tests {
     public void BuildCartList_FromInitialMap() {
         String filename = "data/aoc18.13a.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] map = day13.convertInputToMap(inputAsStrings);
+        char[][] map = utilities.convertInputToMap(inputAsStrings);
 
         List<day13.Cart> actual = day13.extractCartsFromMap(map);
 
@@ -57,7 +57,7 @@ public class day13Tests {
     public void RemoveCartsFromMap() {
         String filename = "data/aoc18.13a.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] map = day13.convertInputToMap(inputAsStrings);
+        char[][] map = utilities.convertInputToMap(inputAsStrings);
 
         List<day13.Cart> actual = day13.extractCartsFromMap(map);
 
@@ -131,7 +131,7 @@ public class day13Tests {
 
         String filename = "data/aoc18.13a.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] map = day13.convertInputToMap(inputAsStrings);
+        char[][] map = utilities.convertInputToMap(inputAsStrings);
 
         List<day13.Cart> carts = day13.extractCartsFromMap(map);
 
@@ -183,7 +183,7 @@ public class day13Tests {
     public void day13_solution1() {
         String filename = "data/aoc18.13.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] map = day13.convertInputToMap(inputAsStrings);
+        char[][] map = utilities.convertInputToMap(inputAsStrings);
 
         List<day13.Cart> carts = day13.extractCartsFromMap(map);
 
@@ -201,7 +201,7 @@ public class day13Tests {
     public void day13_example2_removeCarts() {
         String filename = "data/aoc18.13.txt";
         List<String> inputAsStrings = utilities.getFileContentsAsStrings(filename);
-        char[][] map = day13.convertInputToMap(inputAsStrings);
+        char[][] map = utilities.convertInputToMap(inputAsStrings);
 
         List<day13.Cart> carts = day13.extractCartsFromMap(map);
         day13.removeCollidingCarts = true;

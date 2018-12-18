@@ -115,6 +115,21 @@ public class day15Tests {
         assertEquals(-99, day15.result());
     }
 
+    @Test
+    @Disabled
+    public void Movement_Up() {
+//        char[][] map = new char[][]{
+//                {'.', 'G' },
+//                {'E', '.' },
+//        };
+//
+//        Day15Unit elf = new Day15Unit(1, 0, 'E');
+//
+//        Point actual = Day15Move.calculateMove(elf, map);
+//
+//        assertEquals(0, actual.y);
+//        assertEquals(0, actual.x);
+    }
 
     @Test
     @Disabled
@@ -137,7 +152,7 @@ public class day15Tests {
 
     private class Day15 {
         char[][] map;
-        List<Unit> units;
+        List<Day15Unit> units;
         private int goblinCount;
         private int elfCount;
         private int rounds;
@@ -162,13 +177,13 @@ public class day15Tests {
         }
 
         private void AddGoblin(int row, int col) {
-            Unit goblin = new Unit(row, col, 'G');
+            Day15Unit goblin = new Day15Unit(row, col, 'G');
             units.add(goblin);
             goblinCount++;
         }
 
         private void addAnElf(int row, int col) {
-            Unit elf = new Unit(row, col, 'E');
+            Day15Unit elf = new Day15Unit(row, col, 'E');
             units.add(elf);
             elfCount++;
         }
@@ -190,13 +205,13 @@ public class day15Tests {
                         char whoIs = map[row][col];
                         if (whoIs == 'E' || whoIs == 'G') {
 
-                            Unit unit = getUnitAt(row, col);
+                            Day15Unit unit = getUnitAt(row, col);
                             if (unit.turnCompleted < rounds) {
 
-                                Unit foe = getWeakestAdjacentFoe(unit);
+                                Day15Unit foe = getWeakestAdjacentFoe(unit);
                                 if (foe == null) {
                                     // execute move - dijkstra's?
-                                    Point moveTo = calculateMove(unit);
+                                    Point moveTo = calculateMove(unit, map);
                                     if (moveTo != null) {
                                         move(unit, moveTo);
                                     }
@@ -216,7 +231,7 @@ public class day15Tests {
             }
         }
 
-        private void move(Unit unit, Point moveTo) {
+        private void move(Day15Unit unit, Point moveTo) {
             map[unit.row][unit.col] = '.';
 
             unit.row = moveTo.x;
@@ -225,40 +240,30 @@ public class day15Tests {
             map[unit.row][unit.col] = unit.type;
         }
 
-        private Point calculateMove(Unit unit) {
-            Point moveTo = null;
-            if (unit.type == 'E') {
-                moveTo = new Point(unit.row, unit.col + 1);
-            } else if (unit.type == 'G') {
-                moveTo = new Point(unit.row, unit.col - 1);
-            }
-            return moveTo;
-        }
-
-        private Unit getWeakestAdjacentFoe(Unit unit) {
+        private Day15Unit getWeakestAdjacentFoe(Day15Unit unit) {
 
             // Puzzle input provides a border on all sides, no need to check for out-of-bounds exceptions
 
-            List<Unit> foes = new ArrayList<>();
+            List<Day15Unit> foes = new ArrayList<>();
 
-            Unit unitAbove = getUnitAt(unit.row - 1, unit.col);
+            Day15Unit unitAbove = getUnitAt(unit.row - 1, unit.col);
             if (unitAbove != null && unitAbove.isFoeOf(unit)) foes.add(unitAbove);
 
-            Unit unitLeft = getUnitAt(unit.row, unit.col - 1);
+            Day15Unit unitLeft = getUnitAt(unit.row, unit.col - 1);
             if (unitLeft != null && unitLeft.isFoeOf(unit)) foes.add(unitLeft);
 
-            Unit unitRight = getUnitAt(unit.row, unit.col + 1);
+            Day15Unit unitRight = getUnitAt(unit.row, unit.col + 1);
             if (unitRight != null && unitRight.isFoeOf(unit)) foes.add(unitRight);
 
-            Unit unitBelow = getUnitAt(unit.row + 1, unit.col);
+            Day15Unit unitBelow = getUnitAt(unit.row + 1, unit.col);
             if (unitBelow != null && unitBelow.isFoeOf(unit)) foes.add(unitBelow);
 
             return weakestFoe(foes);
         }
 
-        private Unit weakestFoe(List<Unit> foes) {
-            Unit weakestFoe = null;
-            for (Unit foe :
+        private Day15Unit weakestFoe(List<Day15Unit> foes) {
+            Day15Unit weakestFoe = null;
+            for (Day15Unit foe :
                     foes) {
                 if (weakestFoe == null) {
                     weakestFoe = foe;
@@ -270,8 +275,8 @@ public class day15Tests {
             return weakestFoe;
         }
 
-        private Unit getUnitAt(int row, int col) {
-            for (Unit unit :
+        private Day15Unit getUnitAt(int row, int col) {
+            for (Day15Unit unit :
                     units) {
                 if (unit.isLocation(row, col)) return unit;
             }
@@ -279,14 +284,14 @@ public class day15Tests {
             return null;
         }
 
-        private void attackOn(Unit unit) {
+        private void attackOn(Day15Unit unit) {
             unit.takeDamage();
             if (unit.hp <= 0) {
                 kill(unit);
             }
         }
 
-        private void kill(Unit unit) {
+        private void kill(Day15Unit unit) {
             if (unit.isGoblin()) {
                 goblinCount--;
             } else {
@@ -302,53 +307,81 @@ public class day15Tests {
             return (elfCount > 0) && (goblinCount > 0);
         }
 
+        public Point calculateMove(Day15Unit unit, char[][] map) {
+            Point moveTo = null;
+
+            if (unit.type == 'E') {
+
+
+                moveTo = new Point(unit.row, unit.col + 1);
+
+                // check up
+
+                // check right
+
+                // check left
+
+                // check down
+
+
+
+            } else if (unit.type == 'G') {
+                moveTo = new Point(unit.row, unit.col - 1);
+            }
+
+
+            return moveTo;
+        }
+
         public int result() {
             int hpSum = 0;
-            for (Unit unit :
+            for (Day15Unit unit :
                     units) {
                 hpSum += unit.hp;
             }
             return rounds * hpSum;
         }
 
-        private class Unit {
-            public char type;
-            public int row;
-            public int col;
-            public int hp;
-            public int turnCompleted;
+    }
 
-            public Unit(int row, int col, char type) {
-                this.type = type;
-                this.row = row;
-                this.col = col;
-                this.hp = 200;
-                this.turnCompleted = 0;
-            }
 
-            public void takeDamage() {
-                hp -= 3;
-            }
+    public class Day15Unit {
+        public char type;
+        public int row;
+        public int col;
+        public int hp;
+        public int turnCompleted;
 
-            public boolean isElf() {
-                return type == 'E';
-            }
+        public Day15Unit(int row, int col, char type) {
+            this.type = type;
+            this.row = row;
+            this.col = col;
+            this.hp = 200;
+            this.turnCompleted = 0;
+        }
 
-            public boolean isGoblin() {
-                return type == 'G';
-            }
+        public void takeDamage() {
+            hp -= 3;
+        }
 
-            public boolean isLocation(int row, int col) {
-                return this.row == row && this.col == col;
-            }
+        public boolean isElf() {
+            return type == 'E';
+        }
 
-            public boolean isFoeOf(Unit unit) {
-                if (this.isElf()) return unit.isGoblin();
+        public boolean isGoblin() {
+            return type == 'G';
+        }
 
-                if (this.isGoblin()) return unit.isElf();
+        public boolean isLocation(int row, int col) {
+            return this.row == row && this.col == col;
+        }
 
-                return false;
-            }
+        public boolean isFoeOf(Day15Unit unit) {
+            if (this.isElf()) return unit.isGoblin();
+
+            if (this.isGoblin()) return unit.isElf();
+
+            return false;
         }
     }
 }

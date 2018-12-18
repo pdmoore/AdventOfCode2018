@@ -31,4 +31,17 @@ public class utilities {
         }
         return null;
     }
+
+    public static char[][] convertInputToMap(List<String> inputAsStrings) {
+        int rowCount = inputAsStrings.size();
+        int colCount = inputAsStrings.get(0).length();
+        char[][] map = new char[rowCount][colCount];
+        int i = 0;
+        for (String line :
+                inputAsStrings) {
+            map[i] = line.toCharArray();
+            i++;
+        }
+        return map;
+    }
 }
