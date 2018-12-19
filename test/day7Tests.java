@@ -1,7 +1,10 @@
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class day7Tests {
 
@@ -22,7 +25,14 @@ public class day7Tests {
 
         String actual = day7.calculateStepOrder(rules);
 
-        Assertions.assertEquals("CABDFE", actual);
+        assertEquals("CABDFE", actual);
+    }
+
+    @Test
+    public void ruleCost() {
+        assertEquals( 1, day7.ruleCost("A"));
+        assertEquals( 2, day7.ruleCost("B"));
+        assertEquals(26, day7.ruleCost("Z"));
     }
 
     @Test
@@ -31,7 +41,7 @@ public class day7Tests {
 
         String actual = day7.solution1(filename);
 
-        Assertions.assertEquals("CABDFE", actual);
+        assertEquals("CABDFE", actual);
     }
 
     @Test
@@ -40,8 +50,29 @@ public class day7Tests {
 
         String actual = day7.solution1(filename);
 
-        Assertions.assertEquals("ACBDESULXKYZIMNTFGWJVPOHRQ", actual);
+        assertEquals("ACBDESULXKYZIMNTFGWJVPOHRQ", actual);
     }
 
+    @Test
+    public void solution2_example() {
+        String filename = "data/aoc18.7a.txt";
+
+        int workerCount = 2;
+        int stepCost = 0;
+        int actual = day7.solution2(filename, workerCount, stepCost);
+
+        assertEquals(15, actual);
+    }
+
+    @Test
+    public void solution2() {
+        String filename = "data/aoc18.7.txt";
+
+        int workerCount = 5;
+        int stepCost = 60;
+        int actual = day7.solution2(filename, workerCount, stepCost);
+
+        assertEquals(980, actual);
+    }
 
 }
