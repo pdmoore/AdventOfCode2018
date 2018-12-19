@@ -22,17 +22,19 @@ public class day7 {
 
         for (String inputLine :
                 inputLines) {
+            // Step X must be finished before step Y can begin.
+            //      5                              36
             String dependency = String.valueOf(inputLine.charAt(5));
             String key = String.valueOf(inputLine.charAt(36));
 
             if (rules.containsKey(key)) {
-                List<String> depends = new ArrayList<>(rules.get(key));
-                depends.add(dependency);
-                rules.replace(key, depends);
+                List<String> existingDependencies = new ArrayList<>(rules.get(key));
+                existingDependencies.add(dependency);
+                rules.replace(key, existingDependencies);
             } else {
-                List<String> depends = new ArrayList<>();
-                depends.add(dependency);
-                rules.put(key, depends);
+                List<String> existingDependencies = new ArrayList<>();
+                existingDependencies.add(dependency);
+                rules.put(key, existingDependencies);
 
                 if (!rules.containsKey(dependency)) {
                     rules.put(dependency, new ArrayList<>());
@@ -60,7 +62,6 @@ public class day7 {
     }
 
     private static int timeToCompleteSteps(Map<String, List<String>> rules, int workerCount, int stepCost) {
-        //steporder just to proof the example
         String stepOrder = "";
 
         List<Worker> workers = new ArrayList<>();
