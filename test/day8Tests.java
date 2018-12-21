@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,6 +40,6 @@ public class day8Tests {
         String inputFile = "data/aoc18.8.txt";
         int actual = day8.solution2(inputFile);
 
-        assertEquals(-99, actual);
+        assertEquals(32850, actual);
     }
 }
