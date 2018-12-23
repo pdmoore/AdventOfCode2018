@@ -1,9 +1,10 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class day22Tests {
 
@@ -16,7 +17,7 @@ public class day22Tests {
         Point target = new Point(10, 10);
         int actual = day22.calculateRiskLevel(caveSystem, target);
 
-        Assertions.assertEquals(114, actual);
+        assertEquals(114, actual);
     }
 
     @Test
@@ -32,7 +33,7 @@ public class day22Tests {
 
         char[][] actual = day22.solution1_caveSystem(regions, depth, target);
 
-        Assertions.assertArrayEquals(expected, actual);
+        assertArrayEquals(expected, actual);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class day22Tests {
 
         int actual = day22.solution1(regions, depth, target);
 
-        Assertions.assertEquals(114, actual);
+        assertEquals(114, actual);
     }
 
     @Test
@@ -56,7 +57,7 @@ public class day22Tests {
 
         int actual = day22.solution1(regions, depth, target);
 
-        Assertions.assertEquals(11575, actual);
+        assertEquals(11575, actual);
     }
 
 }
