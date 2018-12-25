@@ -9,16 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class day24Tests {
 
     @Test
-    @Disabled
-    public void parseInput_Immune() {
-        List<String> input = Arrays.asList(
-                "Immune System:",
-                "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2",
-                "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
-        );
-    }
-
-    @Test
     public void parseInput_SingleUnit_Weakness_NoImmunity() {
         String input = "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2";
 
@@ -62,19 +52,73 @@ public class day24Tests {
 
                 () -> assertTrue(actual.weakness.contains(day24.ATTACK_TYPE.SLASHING), "weakness to slashing")
         );
-
     }
-    // TODO - parse immunites
-    // TODO - show example with both weakness and immunity
-    // TODO - handle SLASHING ATTACK
 
-    // TODO handle IMMNUNE SYSTEM COLLECTION
+    @Test
+    public void parseInput_SingleUnit_AttackType_Cold() {
+        String input = "18 units each with 729 hit points (weak to fire; immune to cold, slashing)\n" +
+                " with an attack that does 8 radiation damage at initiative 10";
+
+        day24.Group actual = day24.parseInputLine(input);
+
+        assertTrue(actual.immunity.contains(day24.ATTACK_TYPE.COLD), "immune to cold");
+    }
+
+    @Test
+    public void SingleUnit_EffectivePower() {
+        String input = "18 units each with 729 hit points (weak to fire; immune to cold, slashing)\n" +
+                " with an attack that does 8 radiation damage at initiative 10";
+
+        day24.Group actual = day24.parseInputLine(input);
+
+        assertEquals(144, actual.effectivePower());
+    }
+
+    // TODO handle IMMUNE SYSTEM COLLECTION
     // TODO handle INFECTION COLLECTION
+
+    @Test
+    public void parseInput_Immune() {
+        List<String> input = Arrays.asList(
+                "Immune System:",
+                "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2",
+                "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
+        );
+
+        day24.Army actual = day24.parseInput(input);
+
+        assertAll(
+                () -> assertEquals("Immune System:", actual.name),
+                () -> assertEquals(2, actual.groups.size()),
+                () -> assertEquals(17 + 989, actual.totalUnits())
+        );
+    }
+
+    @Test
+    public void computeResult() {
+        List<String> input = Arrays.asList(
+                "Immune System:",
+                "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2",
+                "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
+        );
+
+        day24.Army actual = day24.parseInput(input);
+
+        assertEquals(17 + 989, actual.totalUnits());
+    }
+
 
     // figure out attack logic
     // handle a round of attacks
 
     // determine end state
 
-    // show result
+    // target selection, ordered by decreasing effective power
+    // if tied then ordered by initiative
+    // attacking group chooses enemy it would deal the most damage to
+    // if damage is equal, then pick one with highest effective power, then highest initiative
+    // defending group can only be chosen by one attacking group
+    // at end fo targeting each group has picked zero or one to attack and is being attacked by zero or one
+
+
 }

@@ -1,9 +1,22 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.jar.Attributes;
 
 public class day24 {
+
+    public static day24.Army parseInput(List<String> input) {
+
+        Army army = new Army();
+
+        army.name = input.get(0);
+        for (int i = 1; i < input.size(); i++) {
+            army.addGroup(parseInputLine(input.get(i)));
+        }
+
+        return army;
+    }
+
+    public enum ATTACK_TYPE { BLUDGEONING, COLD, FIRE, RADIATION, SLASHING }
 
 
     public static Group parseInputLine(String input) {
@@ -33,15 +46,14 @@ public class day24 {
     }
 
     private static List<ATTACK_TYPE> parseImmunities(String input) {
-        // POSSIBLE TO HAVE NO "(", return empty
-        int firstParen = input.indexOf('(');
-        int secondParen = input.indexOf(')');
-        int semicolon = input.indexOf(';');
-
         boolean hasImmunities = input.contains("immune to");
         if (hasImmunities) {
-            int rightHand = (semicolon == -1) ? secondParen : semicolon;
-            String attackStrings = input.substring(firstParen + "immune to".length() + 2, rightHand);
+            int leftHand = input.indexOf("immune to") + "immune to".length() + 1;
+
+            int secondParen = input.indexOf(')');
+            int semicolon = input.indexOf(';');
+            int rightHand = (semicolon > leftHand) ? semicolon : secondParen;
+            String attackStrings = input.substring(leftHand, rightHand);
             String[] tokens = attackStrings.split(",");
 
             return getAttackTypes(tokens);
@@ -51,6 +63,7 @@ public class day24 {
     }
 
     private static List<ATTACK_TYPE> parseWeakness(String input) {
+        // THIS MAY BE ASSUMING WEAKNESS IS ALWAYS FIRST
         int firstParen = input.indexOf('(');
         int secondParen = input.indexOf(')');
         int semicolon = input.indexOf(';');
@@ -74,12 +87,11 @@ public class day24 {
             case "fire"        : return ATTACK_TYPE.FIRE;
             case "radiation"   : return ATTACK_TYPE.RADIATION;
             case "bludgeoning" : return ATTACK_TYPE.BLUDGEONING;
+            case "cold"        : return ATTACK_TYPE.COLD;
             case "slashing"    : return ATTACK_TYPE.SLASHING;
         }
         return ATTACK_TYPE.FIRE;
     }
-
-    public enum ATTACK_TYPE { BLUDGEONING, FIRE, RADIATION, SLASHING }
 
     public static class Group {
         private static int IdCount = 1;
@@ -103,6 +115,32 @@ public class day24 {
             this.weakness = weaknesses;
 
             this.immunity = immunities;
+        }
+
+        public int effectivePower() {
+            return units * attackDamage;
+        }
+    }
+
+    public static class Army {
+        public String name;
+        List<Group> groups;
+
+        public Army() {
+            groups = new ArrayList<>();
+        }
+
+        public void addGroup(Group group) {
+            groups.add(group);
+        }
+
+        public int totalUnits() {
+            int total = 0;
+            for (Group group :
+                    groups) {
+                total += group.units;
+            }
+            return total;
         }
     }
 }
