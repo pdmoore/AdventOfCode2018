@@ -4,7 +4,9 @@ import java.util.List;
 
 public class day24 {
 
-    public static day24.Army parseInput(List<String> input) {
+    public enum ATTACK_TYPE { BLUDGEONING, COLD, FIRE, RADIATION, SLASHING }
+
+    public static day24.Army parseSingleArmyInput(List<String> input) {
 
         Army army = new Army();
 
@@ -16,8 +18,30 @@ public class day24 {
         return army;
     }
 
-    public enum ATTACK_TYPE { BLUDGEONING, COLD, FIRE, RADIATION, SLASHING }
+    public static Simulator parseInput(List<String> input) {
+        Simulator sim = new Simulator();
 
+        Army army = new Army();
+        int index = 0;
+        for (String inputLine :
+                input) {
+            if (inputLine.isEmpty()) {
+                sim.addArmy(army);
+                index = 0;
+                army = new Army();
+            } else if (index == 0) {
+                army.name = inputLine;
+                Group.resetIdCount();
+                index++;
+            } else {
+                index++;
+                army.addGroup(parseInputLine(inputLine));
+            }
+        }
+        sim.addArmy(army);
+
+        return sim;
+    }
 
     public static Group parseInputLine(String input) {
 
@@ -117,8 +141,16 @@ public class day24 {
             this.immunity = immunities;
         }
 
+        public static void resetIdCount() {
+            IdCount = 1;
+        }
+
         public int effectivePower() {
             return units * attackDamage;
+        }
+
+        public String summary() {
+            return String.format("Group %d contains %d units", Id, units);
         }
     }
 
@@ -141,6 +173,40 @@ public class day24 {
                 total += group.units;
             }
             return total;
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(name);
+            sb.append(System.lineSeparator());
+            for (Group group :
+                    groups) {
+                sb.append(group.summary());
+                sb.append(System.lineSeparator());
+            }
+
+            return sb.toString();
+        }
+    }
+
+    public static class Simulator {
+        public List<Army> armies;
+
+        public Simulator() {
+            armies = new ArrayList<>();
+        }
+
+        public void addArmy(Army army) {
+            armies.add(army);
+        }
+
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (Army army :
+                    armies) {
+                sb.append(army.toString());
+            }
+            return sb.toString();
         }
     }
 }

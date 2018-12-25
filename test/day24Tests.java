@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -10,6 +9,7 @@ public class day24Tests {
 
     @Test
     public void parseInput_SingleUnit_Weakness_NoImmunity() {
+        day24.Group.resetIdCount();
         String input = "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2";
 
         day24.Group actual = day24.parseInputLine(input);
@@ -37,7 +37,7 @@ public class day24Tests {
         assertAll(
                 () -> assertTrue(actual.immunity.isEmpty(), "no immunity"),
                 () -> assertTrue(actual.weakness.isEmpty(), "no weakness")
-                );
+        );
     }
 
     @Test
@@ -85,13 +85,32 @@ public class day24Tests {
                 "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
         );
 
-        day24.Army actual = day24.parseInput(input);
+        day24.Army actual = day24.parseSingleArmyInput(input);
 
         assertAll(
                 () -> assertEquals("Immune System:", actual.name),
                 () -> assertEquals(2, actual.groups.size()),
                 () -> assertEquals(17 + 989, actual.totalUnits())
         );
+    }
+
+    @Test
+    public void parseInput_TwoArmies() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24.txt");
+
+        day24.Simulator actual = day24.parseInput(input);
+
+        assertEquals(2, actual.armies.size());
+    }
+
+    @Test
+    public void parseInput_Sample() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
+
+        day24.Simulator actual = day24.parseInput(input);
+
+        // TODO - decide if to capture output as gold master and compare
+        System.out.println(actual.toString());
     }
 
     @Test
@@ -102,7 +121,7 @@ public class day24Tests {
                 "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
         );
 
-        day24.Army actual = day24.parseInput(input);
+        day24.Army actual = day24.parseSingleArmyInput(input);
 
         assertEquals(17 + 989, actual.totalUnits());
     }
@@ -119,6 +138,5 @@ public class day24Tests {
     // if damage is equal, then pick one with highest effective power, then highest initiative
     // defending group can only be chosen by one attacking group
     // at end fo targeting each group has picked zero or one to attack and is being attacked by zero or one
-
-
+    
 }
