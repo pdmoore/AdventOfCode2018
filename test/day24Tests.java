@@ -122,13 +122,13 @@ public class day24Tests {
     }
 
     @Test
-    public void targetSelection_Sample() {
+    public void targetSelection_Sample_firstRound() {
         List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
 
         day24.Simulator actual = day24.parseInput(input);
 
         String targetSelection = actual.targetSelection();
-        String[] actualTokens = targetSelection.toString().split("\\n");
+        String[] actualTokens = targetSelection.split("\\n");
 
         String expected = "Infection group 1 would deal defending group 1 185832 damage\n" +
                 "Infection group 1 would deal defending group 2 185832 damage\n" +
@@ -142,18 +142,34 @@ public class day24Tests {
     }
 
     @Test
-    public void computeResult() {
-        List<String> input = Arrays.asList(
-                "Immune System:",
-                "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2",
-                "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
-        );
+    public void attacking_Sample_firstRound() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
+        day24.Simulator actual = day24.parseInput(input);
+        actual.targetSelection();
 
-        day24.Army actual = day24.parseSingleArmyInput(input);
+        String attacking = actual.attacking();
+        String[] actualTokens = attacking.toString().split("\\n");
 
-        assertEquals(17 + 989, actual.totalUnits());
+        String expected = "Infection group 2 attacks defending group 2, killing 84 units\n" +
+                "Immune System group 2 attacks defending group 1, killing 4 units\n" +
+                "Immune System group 1 attacks defending group 2, killing 51 units\n" +
+                "Infection group 1 attacks defending group 1, killing 17 units\n";
+        String[] expectedTokens = expected.split("\\n");
+
+        assertArrayEquals(expectedTokens, actualTokens);
     }
 
+    @Test
+    public void battle_Sample_toFinish() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
+        day24.Simulator actual = day24.parseInput(input);
+
+        actual.battle();
+
+
+        assertEquals("Infection:", actual.winner.name);
+        assertEquals(5216, actual.infectionArmy.totalUnits());
+    }
 
     // done - figure out attack logic Target Selection (for round, no special tie breaker logci)
     // TODO NEXT handle a round of attacks
@@ -168,4 +184,17 @@ public class day24Tests {
     // defending group can only be chosen by one attacking group
     // at end fo targeting each group has picked zero or one to attack and is being attacked by zero or one
 
+
+    @Test
+    public void computeResult() {
+        List<String> input = Arrays.asList(
+                "Immune System:",
+                "17 units each with 5390 hit points (weak to radiation, bludgeoning) with an attack that does 4507 fire damage at initiative 2",
+                "989 units each with 1274 hit points (immune to fire; weak to bludgeoning, slashing) with an attack that does 25 slashing damage at initiative 3"
+        );
+
+        day24.Army actual = day24.parseSingleArmyInput(input);
+
+        assertEquals(17 + 989, actual.totalUnits());
+    }
 }

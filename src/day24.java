@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.swing.text.html.HTMLDocument;
+import java.util.*;
 
 public class day24 {
 
@@ -129,6 +128,7 @@ public class day24 {
         public List<ATTACK_TYPE> immunity;
         public Group isAttacking;
         public Group isAttackedBy;
+        public String armyName;
 
         public Group(int units, int hitPoints, int initiative, int damage, ATTACK_TYPE attackType, List<ATTACK_TYPE> weaknesses, List<ATTACK_TYPE> immunities) {
             Id = IdCount++;
@@ -162,6 +162,20 @@ public class day24 {
 
             return 1;
         }
+
+        public void attack() {
+            isAttacking.beAttacked(attackType, effectivePower());
+        }
+
+        private void beAttacked(ATTACK_TYPE attackType, int baseDamage) {
+            int damageReceived = baseDamage * attackMultiplier(attackType);
+
+            int damageToInflict = damageReceived;
+            while (damageToInflict >= hpPerUnit && units > 0) {
+                units -= 1;
+                damageToInflict -= hpPerUnit;
+            }
+        }
     }
 
     public static class Army {
@@ -174,6 +188,7 @@ public class day24 {
 
         public void addGroup(Group group) {
             groups.add(group);
+            group.armyName = name.substring(0, name.length() - 1);
         }
 
         public int totalUnits() {
@@ -203,6 +218,7 @@ public class day24 {
         public List<Army> armies;
         Army infectionArmy;
         Army immunityArmy;
+        Army winner;
 
         public Simulator() {
             armies = new ArrayList<>();
@@ -278,6 +294,65 @@ public class day24 {
                     sb.append("defending group " + defendingGroup.Id + " " + damageAmount + " damage");
                     sb.append(System.lineSeparator());
                 }
+            }
+        }
+
+        public String attacking() {
+            StringBuilder sb = new StringBuilder();
+
+            // place groups by initiative in array
+            Map<Integer, Group> groupsByInitiative = new TreeMap<>(Collections.reverseOrder());
+            for (Group group:
+                    infectionArmy.groups) {
+                groupsByInitiative.put(group.initiative, group);
+            }
+            for (Group group:
+                    immunityArmy.groups) {
+                groupsByInitiative.put(group.initiative, group);
+            }
+
+            // for each group, reverse order
+            Iterator i = groupsByInitiative.entrySet().iterator();
+            while (i.hasNext()) {
+                Map.Entry<Integer, Group> mapEntry = (Map.Entry<Integer, Group>) i.next();
+                Group attacker = mapEntry.getValue();
+
+                int unitsInDefenderBefore = attacker.isAttacking.units;
+                attacker.attack();
+                int unitsInDefenderAfter = attacker.isAttacking.units;
+                int unitsDefeated = unitsInDefenderBefore - unitsInDefenderAfter;
+
+                sb.append(attacker.armyName + " group " + attacker.Id + " attacks defending group " + attacker.isAttacking.Id + ", killing " + unitsDefeated + " units");
+                sb.append(System.lineSeparator());
+            }
+
+            // if attacking someone
+            // attack and deal damage
+
+            // check for no units
+
+
+
+
+
+            return sb.toString();
+        }
+
+        public void battle() {
+
+            while (winner == null) {
+                targetSelection();
+                attacking();
+
+                checkForWinner();
+            }
+        }
+
+        private void checkForWinner() {
+            if (infectionArmy.totalUnits() == 0) {
+                winner = immunityArmy;
+            } else if (immunityArmy.totalUnits() == 0) {
+                winner = infectionArmy;
             }
         }
     }
