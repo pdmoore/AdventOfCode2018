@@ -127,6 +127,8 @@ public class day24 {
         public ATTACK_TYPE attackType;
         public List<ATTACK_TYPE> weakness;
         public List<ATTACK_TYPE> immunity;
+        public Group isAttacking;
+        public Group isAttackedBy;
 
         public Group(int units, int hitPoints, int initiative, int damage, ATTACK_TYPE attackType, List<ATTACK_TYPE> weaknesses, List<ATTACK_TYPE> immunities) {
             Id = IdCount++;
@@ -151,6 +153,14 @@ public class day24 {
 
         public String summary() {
             return String.format("Group %d contains %d units", Id, units);
+        }
+
+        public int attackMultiplier(ATTACK_TYPE attackType) {
+            if (immunity.contains(attackType)) return 0;
+
+            if (weakness.contains(attackType)) return 2;
+
+            return 1;
         }
     }
 
@@ -191,6 +201,8 @@ public class day24 {
 
     public static class Simulator {
         public List<Army> armies;
+        Army infectionArmy;
+        Army immunityArmy;
 
         public Simulator() {
             armies = new ArrayList<>();
@@ -198,6 +210,12 @@ public class day24 {
 
         public void addArmy(Army army) {
             armies.add(army);
+
+            if (army.name.equals("Immune System:")) {
+                immunityArmy = army;
+            } else if (army.name.equals("Infection:")) {
+                infectionArmy = army;
+            }
         }
 
         public String toString() {
@@ -207,6 +225,60 @@ public class day24 {
                 sb.append(army.toString());
             }
             return sb.toString();
+        }
+
+        public String targetSelection() {
+            StringBuilder sb = new StringBuilder();
+
+            targetSelection(sb, "Infection", immunityArmy.groups, infectionArmy.groups);
+
+            targetSelection(sb, "Immune System", infectionArmy.groups, immunityArmy.groups);
+
+            return sb.toString();
+        }
+
+        private void targetSelection(StringBuilder sb, String attackingArmyName, List<Group> defendingArmy, List<Group> attackingArmy) {
+            for (Group defendingGroup :
+                    defendingArmy) {
+                defendingGroup.isAttackedBy = null;
+            }
+
+            // TODO this needs to be in decreasing order of effective power!
+            for (Group attackingGroup :
+                    attackingArmy) {
+
+                attackingGroup.isAttacking = null;
+
+                for (Group defendingGroup :
+                        defendingArmy) {
+
+                    if (defendingGroup.isAttackedBy != null) continue;
+
+                    int damageAmount = attackingGroup.effectivePower() * defendingGroup.attackMultiplier(attackingGroup.attackType);
+
+                    if (attackingGroup.isAttacking == null) {
+                        attackingGroup.isAttacking = defendingGroup;
+                        defendingGroup.isAttackedBy = attackingGroup;
+                    } else {
+
+                        // is the current attack target taking less damage?
+                        // eventually figure out ties
+                        int currentDamageAmount = attackingGroup.effectivePower() *
+                                attackingGroup.isAttacking.attackMultiplier(attackingGroup.attackType);
+
+                        // TODO need to resolve ties
+                        if (damageAmount > currentDamageAmount) {
+                            attackingGroup.isAttacking.isAttackedBy = null;
+                            attackingGroup.isAttacking = defendingGroup;
+                            defendingGroup.isAttackedBy = attackingGroup;
+                        }
+                    }
+
+                    sb.append(attackingArmyName + " group " + attackingGroup.Id + " would deal ");
+                    sb.append("defending group " + defendingGroup.Id + " " + damageAmount + " damage");
+                    sb.append(System.lineSeparator());
+                }
+            }
         }
     }
 }
