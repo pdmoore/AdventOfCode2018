@@ -1,6 +1,9 @@
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,13 +145,48 @@ public class day24Tests {
     }
 
     @Test
+    public void targetSelection_Sample_TieBreaker() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
+
+        day24.Simulator actual = day24.parseInput(input);
+
+        actual.targetSelection();
+        actual.attacking();
+
+        String[] actualTokens = actual.toString().split("\\n");
+
+        String expected = "Immune System:\n" +
+                "Group 2 contains 905 units\n" +
+                "Infection:\n" +
+                "Group 1 contains 797 units\n" +
+                "Group 2 contains 4434 units\n";
+        String[] expectedTokens = expected.split("\\n");
+
+        assertArrayEquals(expectedTokens, actualTokens);
+
+        actual.targetSelection();
+        actual.attacking();
+
+        actualTokens = actual.toString().split("\\n");
+
+        expected = "Immune System:\n" +
+                "Group 2 contains 761 units\n" +
+                "Infection:\n" +
+                "Group 1 contains 793 units\n" +
+                "Group 2 contains 4434 units\n";
+        expectedTokens = expected.split("\\n");
+
+        assertArrayEquals(expectedTokens, actualTokens);
+    }
+
+    @Test
     public void attacking_Sample_firstRound() {
         List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24a.txt");
         day24.Simulator actual = day24.parseInput(input);
         actual.targetSelection();
 
         String attacking = actual.attacking();
-        String[] actualTokens = attacking.toString().split("\\n");
+        String[] actualTokens = attacking.split("\\n");
 
         String expected = "Infection group 2 attacks defending group 2, killing 84 units\n" +
                 "Immune System group 2 attacks defending group 1, killing 4 units\n" +
@@ -165,7 +203,6 @@ public class day24Tests {
         day24.Simulator actual = day24.parseInput(input);
 
         actual.battle();
-
 
         assertEquals("Infection:", actual.winner.name);
         assertEquals(5216, actual.infectionArmy.totalUnits());
@@ -197,4 +234,48 @@ public class day24Tests {
 
         assertEquals(17 + 989, actual.totalUnits());
     }
+
+
+    @Test
+    public void targetSelection_SortedByDecreasingEffectivePower() {
+        day24.Group.resetIdCount();
+
+        int ignored = -1;
+
+        day24.Group group1 = new day24.Group(5, ignored, ignored, 50, day24.ATTACK_TYPE.SLASHING, Collections.emptyList(), Collections.emptyList());
+        day24.Group group2 = new day24.Group(10, ignored, ignored, 2, day24.ATTACK_TYPE.BLUDGEONING, Collections.emptyList(), Collections.emptyList());
+        day24.Group group3 = new day24.Group(30, ignored, ignored, 10, day24.ATTACK_TYPE.RADIATION, Collections.emptyList(), Collections.emptyList());
+        List<day24.Group> sortInPlace = new ArrayList<>();
+        sortInPlace.add(group1);
+        sortInPlace.add(group2);
+        sortInPlace.add(group3);
+
+        day24.sortByDecreasingEffectivePower(sortInPlace);
+
+        assertEquals(3, sortInPlace.get(0).Id);
+        assertEquals(1, sortInPlace.get(1).Id);
+        assertEquals(2, sortInPlace.get(2).Id);
+    }
+
+    @Test
+    public void targetSelection_SortedByIntiative_WhenEffectivePowerSame() {
+        day24.Group.resetIdCount();
+
+        int ignored = -1;
+
+        day24.Group group1 = new day24.Group(5, ignored, 5, 10, day24.ATTACK_TYPE.SLASHING, Collections.emptyList(), Collections.emptyList());
+        day24.Group group2 = new day24.Group(5, ignored, 99, 10, day24.ATTACK_TYPE.BLUDGEONING, Collections.emptyList(), Collections.emptyList());
+        day24.Group group3 = new day24.Group(25, ignored, 44, 2, day24.ATTACK_TYPE.RADIATION, Collections.emptyList(), Collections.emptyList());
+        List<day24.Group> sortInPlace = new ArrayList<>();
+        sortInPlace.add(group1);
+        sortInPlace.add(group2);
+        sortInPlace.add(group3);
+
+        day24.sortByDecreasingEffectivePower(sortInPlace);
+
+        assertEquals(2, sortInPlace.get(0).Id);
+        assertEquals(3, sortInPlace.get(1).Id);
+        assertEquals(1, sortInPlace.get(2).Id);
+    }
+
 }

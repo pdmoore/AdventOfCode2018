@@ -1,4 +1,3 @@
-import javax.swing.text.html.HTMLDocument;
 import java.util.*;
 
 public class day24 {
@@ -170,10 +169,11 @@ public class day24 {
         private void beAttacked(ATTACK_TYPE attackType, int baseDamage) {
             int damageReceived = baseDamage * attackMultiplier(attackType);
 
-            int damageToInflict = damageReceived;
-            while (damageToInflict >= hpPerUnit && units > 0) {
-                units -= 1;
-                damageToInflict -= hpPerUnit;
+            int unitsToKill = damageReceived / hpPerUnit;
+
+            units -= unitsToKill;
+            if (units < 0) {
+                units = 0;
             }
         }
     }
@@ -206,8 +206,10 @@ public class day24 {
             sb.append(System.lineSeparator());
             for (Group group :
                     groups) {
-                sb.append(group.summary());
-                sb.append(System.lineSeparator());
+                if (group.units > 0) {
+                    sb.append(group.summary());
+                    sb.append(System.lineSeparator());
+                }
             }
 
             return sb.toString();
@@ -260,6 +262,9 @@ public class day24 {
             }
 
             // TODO this needs to be in decreasing order of effective power!
+
+            sortByDecreasingEffectivePower(attackingArmy);
+
             for (Group attackingGroup :
                     attackingArmy) {
 
@@ -268,7 +273,7 @@ public class day24 {
                 for (Group defendingGroup :
                         defendingArmy) {
 
-                    if (defendingGroup.isAttackedBy != null) continue;
+                    if (defendingGroup.units == 0 || defendingGroup.isAttackedBy != null) continue;
 
                     int damageAmount = attackingGroup.effectivePower() * defendingGroup.attackMultiplier(attackingGroup.attackType);
 
@@ -277,7 +282,7 @@ public class day24 {
                         defendingGroup.isAttackedBy = attackingGroup;
                     } else {
 
-                        // is the current attack target taking less damage?
+                        // TODO is the current attack target taking less damage?
                         // eventually figure out ties
                         int currentDamageAmount = attackingGroup.effectivePower() *
                                 attackingGroup.isAttacking.attackMultiplier(attackingGroup.attackType);
@@ -311,29 +316,21 @@ public class day24 {
                 groupsByInitiative.put(group.initiative, group);
             }
 
-            // for each group, reverse order
             Iterator i = groupsByInitiative.entrySet().iterator();
             while (i.hasNext()) {
                 Map.Entry<Integer, Group> mapEntry = (Map.Entry<Integer, Group>) i.next();
                 Group attacker = mapEntry.getValue();
 
-                int unitsInDefenderBefore = attacker.isAttacking.units;
-                attacker.attack();
-                int unitsInDefenderAfter = attacker.isAttacking.units;
-                int unitsDefeated = unitsInDefenderBefore - unitsInDefenderAfter;
+                if (attacker.units > 0 && attacker.isAttacking != null) {
+                    int unitsInDefenderBefore = attacker.isAttacking.units;
+                    attacker.attack();
+                    int unitsInDefenderAfter = attacker.isAttacking.units;
+                    int unitsDefeated = unitsInDefenderBefore - unitsInDefenderAfter;
 
-                sb.append(attacker.armyName + " group " + attacker.Id + " attacks defending group " + attacker.isAttacking.Id + ", killing " + unitsDefeated + " units");
-                sb.append(System.lineSeparator());
+                    sb.append(attacker.armyName + " group " + attacker.Id + " attacks defending group " + attacker.isAttacking.Id + ", killing " + unitsDefeated + " units");
+                    sb.append(System.lineSeparator());
+                }
             }
-
-            // if attacking someone
-            // attack and deal damage
-
-            // check for no units
-
-
-
-
 
             return sb.toString();
         }
@@ -356,4 +353,21 @@ public class day24 {
             }
         }
     }
+
+    public static void sortByDecreasingEffectivePower(List<Group> army) {
+        army.sort((s1, s2) -> {
+            Integer effectivePower1 = s1.effectivePower();
+            Integer effectivePower2 = s2.effectivePower();
+            if (effectivePower1.equals(effectivePower2)) {
+                Integer initiative1 = s1.initiative;
+                Integer initiative2 = s2.initiative;
+                return initiative1.compareTo(initiative2);
+            }
+            return effectivePower1.compareTo(effectivePower2);
+        });
+
+        Collections.reverse(army);
+    }
+
+
 }
