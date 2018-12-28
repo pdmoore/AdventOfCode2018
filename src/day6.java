@@ -48,6 +48,10 @@ public class day6 {
         private final List<Point> initialCoordinates;
         // TODO likely to change since input exceeds 26 letters, and may want to track an object grid
         char[][] grid;
+        private int colMinimum;
+        private int colMaximum;
+        private int rowMinimum;
+        private int rowMaximum;
 
         public Board(List<Point> points) {
 
@@ -59,6 +63,33 @@ public class day6 {
             grid = new char[maxRow + 2][maxCol + 2];
 
             fillStartingGrid(grid, points);
+
+            locateGridBoundaries(points);
+        }
+
+        private void fillStartingGrid(char[][] grid, List<Point> points) {
+            char c = 'A';
+            for (Point point :
+                    points) {
+                grid[point.x][point.y] = c++;
+            }
+        }
+
+        private void locateGridBoundaries(List<Point> points) {
+            colMinimum = Integer.MAX_VALUE;
+            colMaximum = Integer.MIN_VALUE;
+            rowMinimum = Integer.MAX_VALUE;
+            rowMaximum = Integer.MIN_VALUE;
+
+            for (Point point :
+                    points) {
+
+                if (point.y < colMinimum) colMinimum = point.y;
+                if (point.y > colMaximum) colMaximum = point.y;
+
+                if (point.x < rowMinimum) rowMinimum = point.x;
+                if (point.x > rowMaximum) rowMaximum = point.x;
+            }
         }
 
         public void fillClosestCoordinates() {
@@ -113,14 +144,6 @@ public class day6 {
             return grid.length;
         }
 
-        private void fillStartingGrid(char[][] grid, List<Point> points) {
-            char c = 'A';
-            for (Point point :
-                    points) {
-                grid[point.x][point.y] = c++;
-            }
-        }
-
         private int locateMaxCol(List<Point> points) {
             int max = 0;
             for (Point point :
@@ -143,11 +166,8 @@ public class day6 {
 
             Map<Character, Integer> cellCounts = new HashMap<>();
 
-            for (int row = 1; row < numRows(grid) - 1; row++) {
-                for (int col = 1; col < numCol(grid) - 1; col++) {
-
-
-                    // ignore anything off the left/right bottom/top edges!
+            for (int row = rowMinimum; row < rowMaximum; row++) {
+                for (int col = colMinimum; col < colMaximum; col++) {
 
                     Character gridValue = grid[row][col];
                     if (gridValue.equals('.')) continue;
