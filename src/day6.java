@@ -1,5 +1,5 @@
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class day6 {
@@ -53,18 +53,37 @@ public class day6 {
 
             fillClosestCoordinates(grid, points);
 
-
             printGrid(grid);
         }
 
         private void fillClosestCoordinates(char[][] grid, List<Point> points) {
 
-            // either each pint in grid, find lowest nearby point
+            //Brute force (ok for small grid and few points)
+            for (int row = 0; row < numRows(grid); row++) {
+                for (int col = 0; col < numCol(grid); col++) {
 
-            // or each point, recursively fill each neighbor until exhausted
+                    // if this cell is a coordinate, skip it
+                    if (points.contains(new Point(row, col))) continue;
 
-            // manhattan distance calculation
+                    char gridChar = '.';
+                    int shortestDistance = Integer.MAX_VALUE;
+                    for (Point coordinate :
+                            points) {
+                        Point target = new Point(row, col);
+                        if (points.contains(target)) continue;
 
+                        int distance = manhattanDistanceBetween(coordinate, target);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            gridChar = Character.toLowerCase(grid[coordinate.x][coordinate.y]);
+                        } else if (distance == shortestDistance) {
+                            gridChar = '.';
+                        }
+                    }
+
+                    grid[row][col] = gridChar;
+                }
+            }
         }
 
         private void printGrid(char[][] grid) {

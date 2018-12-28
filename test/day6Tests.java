@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -10,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class day6Tests {
 
     @Test
-    @Disabled
     public void solution1_Sample() {
         List<String> input = Arrays.asList(
                 "1, 1",
