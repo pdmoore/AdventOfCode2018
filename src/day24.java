@@ -221,9 +221,11 @@ public class day24 {
         Army infectionArmy;
         Army immunityArmy;
         Army winner;
+        static int round;
 
         public Simulator() {
             armies = new ArrayList<>();
+            round = 0;
         }
 
         public void addArmy(Army army) {
@@ -248,20 +250,19 @@ public class day24 {
         public String targetSelection() {
             StringBuilder sb = new StringBuilder();
 
-            targetSelection(sb, "Infection", immunityArmy.groups, infectionArmy.groups);
+            targetSelection_2(sb, "Infection", immunityArmy.groups, infectionArmy.groups);
 
-            targetSelection(sb, "Immune System", infectionArmy.groups, immunityArmy.groups);
+            targetSelection_2(sb, "Immune System", infectionArmy.groups, immunityArmy.groups);
 
             return sb.toString();
         }
 
-        private void targetSelection(StringBuilder sb, String attackingArmyName, List<Group> defendingArmy, List<Group> attackingArmy) {
+
+        private void targetSelection_2(StringBuilder sb, String attackingArmyName, List<Group> defendingArmy, List<Group> attackingArmy) {
             for (Group defendingGroup :
                     defendingArmy) {
                 defendingGroup.isAttackedBy = null;
             }
-
-            // TODO this needs to be in decreasing order of effective power!
 
             sortByDecreasingEffectivePower(attackingArmy);
 
@@ -270,36 +271,35 @@ public class day24 {
 
                 attackingGroup.isAttacking = null;
 
+                int greatestDamage = 0;
+                Group whoGetsAttacked = null;
                 for (Group defendingGroup :
                         defendingArmy) {
 
-                    if (defendingGroup.units == 0 || defendingGroup.isAttackedBy != null) continue;
+                    if (defendingGroup.units == 0) continue;
+                    if (defendingGroup.isAttackedBy != null) continue;
 
                     int damageAmount = attackingGroup.effectivePower() * defendingGroup.attackMultiplier(attackingGroup.attackType);
+                    if (damageAmount == 0) continue;
 
-                    if (attackingGroup.isAttacking == null) {
-                        attackingGroup.isAttacking = defendingGroup;
-                        defendingGroup.isAttackedBy = attackingGroup;
-                    } else {
-
-                        // TODO is the current attack target taking less damage?
-                        // eventually figure out ties
-                        int currentDamageAmount = attackingGroup.effectivePower() *
-                                attackingGroup.isAttacking.attackMultiplier(attackingGroup.attackType);
-
-                        // TODO need to resolve ties
-                        if (damageAmount > currentDamageAmount) {
-                            attackingGroup.isAttacking.isAttackedBy = null;
-                            attackingGroup.isAttacking = defendingGroup;
-                            defendingGroup.isAttackedBy = attackingGroup;
-                        }
+                    if ( (damageAmount > greatestDamage) ||
+                        ((damageAmount == greatestDamage) && defendingGroup.effectivePower() > whoGetsAttacked.effectivePower()) ||
+                        ((damageAmount == greatestDamage) && defendingGroup.effectivePower() == whoGetsAttacked.effectivePower() && defendingGroup.initiative > whoGetsAttacked.initiative)){
+                        greatestDamage  = damageAmount;
+                        whoGetsAttacked = defendingGroup;
                     }
 
                     sb.append(attackingArmyName + " group " + attackingGroup.Id + " would deal ");
                     sb.append("defending group " + defendingGroup.Id + " " + damageAmount + " damage");
                     sb.append(System.lineSeparator());
                 }
+
+                if (whoGetsAttacked != null) {
+                    attackingGroup.isAttacking   = whoGetsAttacked;
+                    whoGetsAttacked.isAttackedBy = attackingGroup;
+                }
             }
+//            System.out.println(sb.toString());
         }
 
         public String attacking() {
@@ -332,16 +332,32 @@ public class day24 {
                 }
             }
 
+//            if (round >= 500) {
+//                System.out.println(sb.toString());
+//            }
+
             return sb.toString();
         }
 
         public void battle() {
+
+//            System.out.println(toString());
 
             while (winner == null) {
                 targetSelection();
                 attacking();
 
                 checkForWinner();
+/*
+                if (round % 100 == 0) {
+                    System.out.println("round: " + round);
+                    System.out.println(toString());
+                }
+                if (round++ > 2000) {
+                    System.out.println(toString());
+                    break;
+                }
+*/
             }
         }
 

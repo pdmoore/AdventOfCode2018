@@ -208,19 +208,18 @@ public class day24Tests {
         assertEquals(5216, actual.infectionArmy.totalUnits());
     }
 
-    // done - figure out attack logic Target Selection (for round, no special tie breaker logci)
-    // TODO NEXT handle a round of attacks
-    // how to take a group out of play?
+    @Test
+//    @Disabled("Infection wins but result is too high")
+    public void battle_solution1() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.24.txt");
+        day24.Simulator actual = day24.parseInput(input);
 
-    // determine end state
+        actual.battle();
 
-    // target selection, ordered by decreasing effective power
-    // if tied then ordered by initiative
-    // attacking group chooses enemy it would deal the most damage to
-    // if damage is equal, then pick one with highest effective power, then highest initiative
-    // defending group can only be chosen by one attacking group
-    // at end fo targeting each group has picked zero or one to attack and is being attacked by zero or one
-
+        assertEquals("Infection:", actual.winner.name);
+        assertEquals(21891, actual.infectionArmy.totalUnits());
+        // 22458 too high
+    }
 
     @Test
     public void computeResult() {
@@ -237,7 +236,7 @@ public class day24Tests {
 
 
     @Test
-    public void targetSelection_SortedByDecreasingEffectivePower() {
+    public void targetSelection_SortedBy_DecreasingEffectivePower() {
         day24.Group.resetIdCount();
 
         int ignored = -1;
@@ -258,7 +257,7 @@ public class day24Tests {
     }
 
     @Test
-    public void targetSelection_SortedByIntiative_WhenEffectivePowerSame() {
+    public void targetSelection_SortedBy_Intiative_WhenEffectivePowerSame() {
         day24.Group.resetIdCount();
 
         int ignored = -1;
