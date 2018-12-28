@@ -8,18 +8,11 @@ public class day6 {
         // create list of points
         Board board = parseInput(input);
 
-
-        // parse input does everything - maybe break that up?
-
-        // for each point in grid, determine closest neighbor
-
         board.fillClosestCoordinates();
-
 
         board.printGrid();
 
-        // calculate the result, ignoring points on infinite edge
-        return board.countOfLargestArea();
+        return board.countOfLargestArea_Ints();
     }
 
     private static Board parseInput(List<String> input) {
@@ -48,6 +41,7 @@ public class day6 {
         private final List<Point> initialCoordinates;
         // TODO likely to change since input exceeds 26 letters, and may want to track an object grid
         char[][] grid;
+        int[][]  gridInts;
         private int colMinimum;
         private int colMaximum;
         private int rowMinimum;
@@ -60,18 +54,21 @@ public class day6 {
             int maxRow = locateMaxRow(points);
             int maxCol = locateMaxCol(points);
 
-            grid = new char[maxRow + 2][maxCol + 2];
+            grid     = new char[maxRow + 2][maxCol + 2];
+            gridInts = new int[maxRow + 2][maxCol + 2];
 
-            fillStartingGrid(grid, points);
+            fillStartingGrid(grid, gridInts, points);
 
             locateGridBoundaries(points);
         }
 
-        private void fillStartingGrid(char[][] grid, List<Point> points) {
+        private void fillStartingGrid(char[][] grid, int[][] gridInts, List<Point> points) {
             char c = 'A';
+            int  i = 1;
             for (Point point :
                     points) {
                 grid[point.x][point.y] = c++;
+                gridInts[point.x][point.y] = i++;
             }
         }
 
@@ -93,10 +90,10 @@ public class day6 {
         }
 
         public void fillClosestCoordinates() {
-            fillClosestCoordinates(grid, initialCoordinates);
+            fillClosestCoordinates(grid, gridInts, initialCoordinates);
         }
 
-        void fillClosestCoordinates(char[][] grid, List<Point> points) {
+        void fillClosestCoordinates(char[][] grid, int[][] gridInts, List<Point> points) {
 
             //Brute force (ok for small grid and few points)
             for (int row = 0; row < numRows(grid); row++) {
@@ -106,22 +103,30 @@ public class day6 {
                     if (points.contains(new Point(row, col))) continue;
 
                     char gridChar = '.';
+                    int gridInt = 0;
+
                     int shortestDistance = Integer.MAX_VALUE;
+                    int index = 0;
                     for (Point coordinate :
                             points) {
                         Point target = new Point(row, col);
+                        index++;
+
                         if (points.contains(target)) continue;
 
                         int distance = manhattanDistanceBetween(coordinate, target);
                         if (distance < shortestDistance) {
                             shortestDistance = distance;
                             gridChar = Character.toLowerCase(grid[coordinate.x][coordinate.y]);
+                            gridInt = index;
                         } else if (distance == shortestDistance) {
                             gridChar = '.';
+                            gridInt = 0;
                         }
                     }
 
                     grid[row][col] = gridChar;
+                    gridInts[row][col] = gridInt;
                 }
             }
         }
@@ -186,6 +191,31 @@ public class day6 {
             int max = Collections.max(cellCounts.values());
 
             return max + 1;
+        }
+
+        public int countOfLargestArea_Ints() {
+
+            Map<Integer, Integer> cellCounts = new HashMap<>();
+
+            for (int row = rowMinimum; row < rowMaximum; row++) {
+                for (int col = colMinimum; col < colMaximum; col++) {
+
+                    int gridValue = gridInts[row][col];
+                    if (gridValue == 0) continue;
+
+                    if (cellCounts.containsKey(gridValue)) {
+                        Integer count = cellCounts.get(gridValue);
+                        count++;
+                        cellCounts.put(gridValue, count);
+                    } else {
+                        cellCounts.put(gridValue, 1);
+                    }
+                }
+            }
+
+            int max = Collections.max(cellCounts.values());
+
+            return max;
         }
     }
 }
