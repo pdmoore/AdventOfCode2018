@@ -8,12 +8,15 @@ public class day6 {
         // create list of points
         Board board = parseInput(input);
 
+
+        // parse input does everything - maybe break that up?
+
         // for each point in grid, determine closest neighbor
 
 
         // calculate the result, ignoring points on infinite edge
 
-        return 0;
+        return board.countOfLargestArea();
     }
 
     private static Board parseInput(List<String> input) {
@@ -128,6 +131,35 @@ public class day6 {
                 if (point.x > max) max = point.x;
             }
             return max;
+        }
+
+        public int countOfLargestArea() {
+
+            Map<Character, Integer> cellCounts = new HashMap<>();
+
+            for (int row = 1; row < numRows(grid) - 1; row++) {
+                for (int col = 1; col < numCol(grid) - 1; col++) {
+
+
+                    // ignore anything off the left/right bottom/top edges!
+
+                    Character gridValue = grid[row][col];
+                    if (gridValue.equals('.')) continue;
+                    if (Character.isUpperCase(gridValue)) continue;
+
+                    if (cellCounts.containsKey(gridValue)) {
+                        Integer count = cellCounts.get(gridValue);
+                        count++;
+                        cellCounts.put(gridValue, count);
+                    } else {
+                        cellCounts.put(gridValue, 1);
+                    }
+                }
+            }
+
+            int max = Collections.max(cellCounts.values());
+
+            return max + 1;
         }
     }
 }
