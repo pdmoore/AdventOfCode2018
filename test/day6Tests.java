@@ -9,6 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class day6Tests {
 
     @Test
+    public void solution1() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.6.txt");
+        assertEquals(5941, day6.solution1(input));
+    }
+
+    @Test
     public void solution1_Sample() {
         List<String> input = Arrays.asList(
                 "1, 1",
@@ -21,7 +27,6 @@ public class day6Tests {
         assertEquals(17, day6.solution1(input));
     }
 
-
     @Test
     public void ManhattanDistance() {
         Point home   = new Point(1,1);
@@ -31,7 +36,6 @@ public class day6Tests {
 
         Point diagonal = new Point(2, 2);
         assertEquals(2, day6.manhattanDistanceBetween(home, diagonal));
-
     }
 
 }
