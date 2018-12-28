@@ -33,6 +33,10 @@ public class day6 {
         return board;
     }
 
+    public static int manhattanDistanceBetween(Point p1, Point p2) {
+        return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+    }
+
     private static class Board {
 
         // TODO likely to change since input exceeds 26 letters, and may want to track an object grid
@@ -40,15 +44,27 @@ public class day6 {
 
         public Board(List<Point> points) {
 
-            //TODO - create grid that's just big enough (kill the 20s)
             int maxRow = locateMaxRow(points);
             int maxCol = locateMaxCol(points);
 
             grid = new char[maxRow + 2][maxCol + 2];
 
-            fillGrid(grid, points);
+            fillStartingGrid(grid, points);
+
+            fillClosestCoordinates(grid, points);
+
 
             printGrid(grid);
+        }
+
+        private void fillClosestCoordinates(char[][] grid, List<Point> points) {
+
+            // either each pint in grid, find lowest nearby point
+
+            // or each point, recursively fill each neighbor until exhausted
+
+            // manhattan distance calculation
+
         }
 
         private void printGrid(char[][] grid) {
@@ -69,7 +85,7 @@ public class day6 {
             return grid.length;
         }
 
-        private void fillGrid(char[][] grid, List<Point> points) {
+        private void fillStartingGrid(char[][] grid, List<Point> points) {
             char c = 'A';
             for (Point point :
                     points) {
