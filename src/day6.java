@@ -22,10 +22,10 @@ public class day6 {
         for (String inputLine :
                 input) {
             String[] tokens = inputLine.split(",");
-            int col = Integer.parseInt(tokens[0].trim());
-            int row = Integer.parseInt(tokens[1].trim());
+            int row = Integer.parseInt(tokens[0].trim());
+            int col = Integer.parseInt(tokens[1].trim());
 
-            points.add(new Point(row, col));
+            points.add(new Point(col, row));
         }
 
         Board board = new Board(points);
@@ -42,9 +42,9 @@ public class day6 {
 
             //TODO - create grid that's just big enough (kill the 20s)
             int maxRow = locateMaxRow(points);
-            int maxY = locateMaxY(points);
+            int maxCol = locateMaxCol(points);
 
-            grid = new char[20][20];
+            grid = new char[maxRow + 2][maxCol + 2];
 
             fillGrid(grid, points);
 
@@ -52,13 +52,21 @@ public class day6 {
         }
 
         private void printGrid(char[][] grid) {
-            for (int row = 0; row < grid[0].length; row++) {
-                for (int col = 0; col < grid.length; col++) {
+            for (int row = 0; row < numRows(grid); row++) {
+                for (int col = 0; col < numCol(grid); col++) {
                     System.out.print(grid[row][col]);
                 }
                 System.out.println(System.lineSeparator());
             }
 
+        }
+
+        private int numCol(char[][] grid) {
+            return grid[0].length;
+        }
+
+        private int numRows(char[][] grid) {
+            return grid.length;
         }
 
         private void fillGrid(char[][] grid, List<Point> points) {
@@ -69,7 +77,7 @@ public class day6 {
             }
         }
 
-        private int locateMaxRow(List<Point> points) {
+        private int locateMaxCol(List<Point> points) {
             int max = 0;
             for (Point point :
                     points) {
@@ -78,11 +86,11 @@ public class day6 {
             return max;
         }
 
-        private int locateMaxY(List<Point> points) {
+        private int locateMaxRow(List<Point> points) {
             int max = 0;
             for (Point point :
                     points) {
-                if (point.y > max) max = point.y;
+                if (point.x > max) max = point.x;
             }
             return max;
         }
