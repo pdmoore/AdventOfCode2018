@@ -25,9 +25,7 @@ public class day6 {
             points.add(new Point(col, row));
         }
 
-        Board board = new Board(points);
-
-        return board;
+        return new Board(points);
     }
 
     public static int manhattanDistanceBetween(Point p1, Point p2) {
@@ -89,8 +87,8 @@ public class day6 {
         void fillClosestCoordinates(int[][] grid, List<Point> points) {
 
             //Brute force (ok for small grid and few points)
-            for (int row = 0; row < numRows(grid); row++) {
-                for (int col = 0; col < numCol(grid); col++) {
+            for (int row = 0; row < rowCount(grid); row++) {
+                for (int col = 0; col < columnCount(grid); col++) {
 
                     // if this cell is a coordinate, skip it
                     if (points.contains(new Point(row, col))) continue;
@@ -121,20 +119,21 @@ public class day6 {
         }
 
         void printGrid() {
-            for (int row = 0; row < numRows(grid); row++) {
-                for (int col = 0; col < numCol(grid); col++) {
+            for (int row = 0; row < rowCount(grid); row++) {
+                for (int col = 0; col < columnCount(grid); col++) {
                     System.out.print(grid[row][col]);
+                    System.out.print('.');
                 }
                 System.out.println(System.lineSeparator());
             }
 
         }
 
-        private int numCol(int[][] grid) {
+        private int columnCount(int[][] grid) {
             return grid[0].length;
         }
 
-        private int numRows(int[][] grid) {
+        private int rowCount(int[][] grid) {
             return grid.length;
         }
 
@@ -168,8 +167,7 @@ public class day6 {
 
                     if (cellCounts.containsKey(gridValue)) {
                         Integer count = cellCounts.get(gridValue);
-                        count++;
-                        cellCounts.put(gridValue, count);
+                        cellCounts.put(gridValue, ++count);
                     } else {
                         cellCounts.put(gridValue, 1);
                     }
