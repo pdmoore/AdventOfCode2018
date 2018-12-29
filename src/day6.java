@@ -10,7 +10,7 @@ public class day6 {
 
 //        board.printGrid();
 
-        return board.countOfLargestArea_Ints();
+        return board.countOfLargestArea();
     }
 
     private static Board parseInput(List<String> input) {
@@ -155,7 +155,7 @@ public class day6 {
             return max;
         }
 
-        public int countOfLargestArea_Ints() {
+        public int countOfLargestArea() {
 
             Map<Integer, Integer> cellCounts = new HashMap<>();
 
