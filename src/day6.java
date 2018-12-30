@@ -13,6 +13,17 @@ public class day6 {
         return board.countOfLargestArea();
     }
 
+    public static int solution2(List<String> input, int maxDistance) {
+        // TODO - might need to expand left/right/top/bottom edges
+        Board board = parseInput(input);
+
+        board.fillSafestRegion(maxDistance);
+
+//        board.printGrid();
+
+        return board.countOfRegion();
+    }
+
     private static Board parseInput(List<String> input) {
         List<Point> points = new ArrayList<>();
 
@@ -122,7 +133,7 @@ public class day6 {
             for (int row = 0; row < rowCount(grid); row++) {
                 for (int col = 0; col < columnCount(grid); col++) {
                     System.out.print(grid[row][col]);
-                    System.out.print('.');
+//                    System.out.print('.');
                 }
                 System.out.println(System.lineSeparator());
             }
@@ -175,6 +186,41 @@ public class day6 {
             }
 
             return Collections.max(cellCounts.values());
+        }
+
+        public void fillSafestRegion(int maxDistance) {
+
+            for (int row = 0; row < rowCount(grid); row++) {
+                for (int col = 0; col < columnCount(grid); col++) {
+
+                    int totalDistance = 0;
+                    for (Point coordinate :
+                            initialCoordinates) {
+                        Point target = new Point(row, col);
+
+                        int distance = manhattanDistanceBetween(coordinate, target);
+                        totalDistance += distance;
+                    }
+
+                    if (totalDistance < maxDistance) {
+                        grid[row][col] = -1;
+                    }
+                }
+            }
+        }
+
+        public int countOfRegion() {
+            int regionCount = 0;
+            for (int row = rowMinimum; row < rowMaximum; row++) {
+                for (int col = colMinimum; col < colMaximum; col++) {
+
+                    int gridValue = grid[row][col];
+                    if (gridValue == -1) {
+                        regionCount++;
+                    }
+                }
+            }
+            return regionCount;
         }
     }
 }

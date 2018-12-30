@@ -38,4 +38,19 @@ public class day6Tests {
         assertEquals(2, day6.manhattanDistanceBetween(home, diagonal));
     }
 
+    @Test
+    public void solution2_Sample() {
+        List<String> input = Arrays.asList(
+                "1, 1",
+                "1, 6",
+                "8, 3",
+                "3, 4",
+                "5, 5",
+                "8, 9");
+
+        int maxDistance = 32;
+        assertEquals(16, day6.solution2(input, maxDistance));
+    }
+
+
 }
