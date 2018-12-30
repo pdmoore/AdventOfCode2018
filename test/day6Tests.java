@@ -52,5 +52,10 @@ public class day6Tests {
         assertEquals(16, day6.solution2(input, maxDistance));
     }
 
-
+    @Test
+    public void solution2() {
+        List<String> input = utilities.getFileContentsAsStrings("data/aoc18.6.txt");
+        int maxDistance = 10000;
+        assertEquals(40244, day6.solution2(input, maxDistance));
+    }
 }
