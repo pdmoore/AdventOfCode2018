@@ -22,9 +22,18 @@ public class day9Tests {
     }
 
     @Test
-    @Disabled
+    public void solution2() {
+        assertEquals(-1, day9.solution1(432, 7101900));
+    }
+
+    @Test
     public void solution1_Example_Fails_WhileAllOtherExamples_AndSolution_Pass() {
         assertEquals(8317, day9.solution1(10, 1618));
+    }
+
+    @Test
+    public void solution1_edgeCase_HighScoreMissedVeryLastPlayer() {
+        assertEquals(95, day9.solution1(1, 48));
     }
 
     @Test
