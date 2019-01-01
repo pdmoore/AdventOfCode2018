@@ -3,11 +3,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class day9 {
-    private static Map<Integer, Integer> players;
     private static Map<Integer, BigInteger> soln2_players;
     private static Node currentMarble;
 
-    public static int solution1(int numPlayers, int lastMarble) {
+    public static String solution1(int numPlayers, int lastMarble) {
 
         initializePlayers(numPlayers);
 
@@ -18,22 +17,10 @@ public class day9 {
         int thisMarbleValue = 1;
         while (thisMarbleValue <= lastMarble) {
             if (thisMarbleValue % 23 == 0) {
-                int currentplayerScore = players.get(currentPlayer);
-                BigInteger curBigInt = soln2_players.get(currentPlayer);
-
-                currentplayerScore += thisMarbleValue;
-                curBigInt = curBigInt.add(BigInteger.valueOf(thisMarbleValue));
-
-                int marble7Clockwise = removeMarble();
-                currentplayerScore += marble7Clockwise;
-                curBigInt = curBigInt.add(BigInteger.valueOf(marble7Clockwise));
-
-                players.put(currentPlayer, currentplayerScore);
-                soln2_players.put(currentPlayer, curBigInt);
+                playerScores(currentPlayer, thisMarbleValue);
 
             } else {
                 insertMarble(thisMarbleValue);
-
             }
 
             currentPlayer++;
@@ -47,27 +34,28 @@ public class day9 {
         return highestScore();
     }
 
-    private static int highestScore() {
-        int highScoreInteger = 0;
+    private static void playerScores(int currentPlayer, int thisMarbleValue) {
+        BigInteger curBigInt = soln2_players.get(currentPlayer);
+
+        curBigInt = curBigInt.add(BigInteger.valueOf(thisMarbleValue));
+
+        int marble7Clockwise = removeMarble();
+        curBigInt = curBigInt.add(BigInteger.valueOf(marble7Clockwise));
+
+        soln2_players.put(currentPlayer, curBigInt);
+    }
+
+    private static String highestScore() {
         BigInteger highScoreBigInteger = new BigInteger("0");
 
-        for (int i = 1; i <= players.size(); i++) {
-            int thisScore = players.get(i);
-            if (thisScore > highScoreInteger) {
-                highScoreInteger = thisScore;
-            }
-
+        for (int i = 1; i <= soln2_players.size(); i++) {
             BigInteger thisBigIntScore = soln2_players.get(i);
             if (thisBigIntScore.compareTo(highScoreBigInteger) > 0) {
                 highScoreBigInteger = thisBigIntScore;
             }
         }
 
-        System.out.println(highScoreInteger);
-        System.out.println(highScoreBigInteger.toString());
-
-
-        return highScoreInteger;
+        return highScoreBigInteger.toString();
     }
 
     private static int removeMarble() {
@@ -109,10 +97,8 @@ public class day9 {
 
     private static void initializePlayers(int numPlayers) {
 
-        players = new HashMap<>();
         soln2_players = new HashMap<>();
         for (int i = 1; i <= numPlayers; i++) {
-            players.put(i, 0);
             soln2_players.put(i, new BigInteger("0"));
         }
     }
