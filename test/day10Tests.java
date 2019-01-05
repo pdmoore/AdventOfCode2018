@@ -10,7 +10,7 @@ public class day10Tests {
     public void parseLine() {
         String input = "position=< 9,  1> velocity=< 0,  2>";
 
-        day10.Something actual = day10.parseLine(input);
+        day10.PointOfLight actual = day10.parseLine(input);
 
         Point expectedPosition = new Point(9, 1);
         assertEquals(expectedPosition, actual.position);
@@ -22,7 +22,7 @@ public class day10Tests {
     @Test
     public void parseLine_NegativeValue() {
         String negativeValueInput = "position=<10, -3> velocity=<-1,  1>";
-        day10.Something actual = day10.parseLine(negativeValueInput);
+        day10.PointOfLight actual = day10.parseLine(negativeValueInput);
 
         Point expectedPosition = new Point(10, -3);
         assertEquals(expectedPosition, actual.position);
@@ -44,10 +44,12 @@ public class day10Tests {
     public void solution1_sample_InitialBoard() {
         String inputFile = "data/aoc18.10a.txt";
 
-        char[][] actual = day10.createBoard(inputFile);
+        day10.Board actual = day10.createBoard(inputFile);
 
-        assertEquals(16, actual.length, "number of rows");
-        assertEquals(22, actual[0].length, "number of columns");
+        assertEquals(16, actual.grid.length, "number of rows");
+        assertEquals(22, actual.grid[0].length, "number of columns");
+
+        System.out.println(actual.toString());
     }
 
 }
