@@ -48,8 +48,25 @@ public class day10Tests {
 
         assertEquals(16, actual.grid.length, "number of rows");
         assertEquals(22, actual.grid[0].length, "number of columns");
-
-        System.out.println(actual.toString());
     }
 
+    @Test
+    public void solution1_sample_3Seconds() {
+        String inputFile = "data/aoc18.10a.txt";
+
+        day10.Board actual = day10.createBoard(inputFile);
+        actual.tick();
+        actual.tick();
+        actual.tick();
+
+        // catch the runtime exception, do a board print out
+    }
+
+    @Test
+    public void solution1() {
+        String inputFile = "data/aoc18.10.txt";
+
+        day10.Board actual = day10.createBoard(inputFile);
+        actual.animate();
+    }
 }

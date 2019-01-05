@@ -6,10 +6,10 @@ public class day10 {
 
     public static PointOfLight parseLine(String input) {
         int positionStart = input.indexOf("<");
-        int positionEnd   = input.indexOf(">");
+        int positionEnd = input.indexOf(">");
 
         int velocityStart = input.indexOf("<", positionEnd);
-        int velocityEnd   = input.indexOf(">", velocityStart);
+        int velocityEnd = input.indexOf(">", velocityStart);
 
         String position = input.substring(positionStart + 1, positionEnd);
         String velocity = input.substring(velocityStart + 1, velocityEnd);
@@ -71,18 +71,25 @@ public class day10 {
     public static class PointOfLight {
         public Point position;
         public Point velocity;
+
+        public void tick() {
+            position.x += velocity.x;
+            position.y += velocity.y;
+        }
     }
 
     public static class Board {
 
         private final BoardSize boardSize;
+        private final List<PointOfLight> pointsOfLight;
         public char[][] grid;
 
         public Board(List<PointOfLight> pointsOfLight) {
+            this.pointsOfLight = pointsOfLight;
             boardSize = determineBoardSize(pointsOfLight);
 
             int maxColumn = boardSize.maxX - boardSize.minX + 1;
-            int maxRow    = boardSize.maxY - boardSize.minY + 1;
+            int maxRow = boardSize.maxY - boardSize.minY + 1;
 
             grid = new char[maxRow][maxColumn];
 
@@ -90,8 +97,6 @@ public class day10 {
         }
 
         private void populateGrid(List<PointOfLight> pointsOfLight) {
-
-            // need to adjust to minX, minY
 
             for (PointOfLight pointOfLight :
                     pointsOfLight) {
@@ -115,6 +120,57 @@ public class day10 {
                 sb.append(System.lineSeparator());
             }
             return sb.toString();
+        }
+
+        // Current implementation sometimes leaves a blank since two points can occupy the same space
+        // Could implement as - erase board, tick points, repaint board
+        public void tick() {
+
+            for (PointOfLight pointOfLight :
+                    pointsOfLight) {
+                int adjustedCol = pointOfLight.position.x - boardSize.minX;
+                int adjustedRow = pointOfLight.position.y - boardSize.minY;
+
+                grid[adjustedRow][adjustedCol] = '.';
+
+                pointOfLight.tick();
+
+                adjustedCol = pointOfLight.position.x - boardSize.minX;
+                adjustedRow = pointOfLight.position.y - boardSize.minY;
+
+                grid[adjustedRow][adjustedCol] = '#';
+            }
+
+            scanForLines();
+        }
+
+        private void scanForLines() {
+            for (int row = 0; row < grid.length - 7; row++) {
+                for (int col = 0; col < grid[0].length; col++) {
+
+                    if (grid[row][col] == '#') {
+                        boolean itsALine = true;
+                        for (int i = 0; i < 7; i++) {
+                            if (grid[row + i][col] != '#') {
+                                itsALine = false;
+                                continue;
+                            }
+                        }
+                        if (itsALine) {
+                            System.out.println(this.toString());
+                            throw new RuntimeException();
+                        }
+                    }
+                }
+            }
+        }
+
+        public void animate() {
+            int i = 1;
+            while ( i < 1000) {
+                tick();
+                i++;
+            }
         }
     }
 
