@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -31,15 +32,6 @@ public class day10Tests {
         assertEquals(expectedVelocity, actual.velocity);
     }
 
-
-    // read in all sample input
-    // store in char[][] array
-    // be able to print out char array
-    // do a clock tick, compare to 1 second clock tick
-
-    // run clock for a while, look for aligned group of 6 or 7 vertical/horizontal adjacent points
-
-
     @Test
     public void solution1_sample_InitialBoard() {
         String inputFile = "data/aoc18.10a.txt";
@@ -55,11 +47,11 @@ public class day10Tests {
         String inputFile = "data/aoc18.10a.txt";
 
         day10.Board actual = day10.createBoard(inputFile);
-        actual.tick();
-        actual.tick();
-        actual.tick();
-
-        // catch the runtime exception, do a board print out
+        try {
+            actual.animate();
+        } catch (RuntimeException e) {
+            assertEquals(3, actual.ticks);
+        }
     }
 
     @Test
@@ -67,6 +59,10 @@ public class day10Tests {
         String inputFile = "data/aoc18.10.txt";
 
         day10.Board actual = day10.createBoard(inputFile);
-        actual.animate();
+        try {
+            actual.animate();
+        } catch(RuntimeException e) {
+            assertEquals("foo", e.getMessage());
+        }
     }
 }
