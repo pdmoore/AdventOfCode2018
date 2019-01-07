@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -33,16 +32,6 @@ public class day10Tests {
     }
 
     @Test
-    public void solution1_sample_InitialBoard() {
-        String inputFile = "data/aoc18.10a.txt";
-
-        day10.Board actual = day10.createBoard(inputFile);
-
-        assertEquals(16, actual.grid.length, "number of rows");
-        assertEquals(22, actual.grid[0].length, "number of columns");
-    }
-
-    @Test
     public void solution1_sample_3Seconds() {
         String inputFile = "data/aoc18.10a.txt";
 
@@ -62,7 +51,20 @@ public class day10Tests {
         try {
             actual.animate();
         } catch(RuntimeException e) {
-            assertEquals("foo", e.getMessage());
+            String expectedMessage =
+                    "  ##       ###  ######  #    #  #    #  #    #  #    #  ######\n" +
+                    " #  #       #        #  ##   #  #    #  #    #  #   #   #     \n" +
+                    "#    #      #        #  ##   #   #  #   #    #  #  #    #     \n" +
+                    "#    #      #       #   # #  #   #  #   #    #  # #     #     \n" +
+                    "#    #      #      #    # #  #    ##    ######  ##      ##### \n" +
+                    "######      #     #     #  # #    ##    #    #  ##      #     \n" +
+                    "#    #      #    #      #  # #   #  #   #    #  # #     #     \n" +
+                    "#    #  #   #   #       #   ##   #  #   #    #  #  #    #     \n" +
+                    "#    #  #   #   #       #   ##  #    #  #    #  #   #   #     \n" +
+                    "#    #   ###    ######  #    #  #    #  #    #  #    #  ######\n" +
+                    "seconds: 10905";
+
+            assertEquals(expectedMessage, e.getMessage());
         }
     }
 }

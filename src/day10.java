@@ -125,6 +125,8 @@ public class day10 {
                 }
                 sb.append(System.lineSeparator());
             }
+            sb.append("seconds: ");
+            sb.append(ticks);
             return sb.toString();
         }
 
@@ -160,7 +162,7 @@ public class day10 {
                 if (pointOfLight.position.y < minRow) minRow = pointOfLight.position.y;
                 if (pointOfLight.position.y > maxRow) maxRow = pointOfLight.position.y;
 
-                if (Math.abs(maxRow - minRow) > 15) return;
+                if (Math.abs(maxRow - minRow) > 8) return;
             }
 
 
@@ -173,9 +175,9 @@ public class day10 {
 
             populateGrid(pointsOfLight, finalBoardSize);
 
-            System.out.println(this.toString());
+            String message = this.toString();
 
-            throw new RuntimeException("seconds: " + ticks);
+            throw new RuntimeException(message);
         }
 
         //TODO - redo this to look for all y values being with 10 of each other.
