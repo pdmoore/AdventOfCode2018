@@ -162,7 +162,7 @@ public class day10 {
                 if (pointOfLight.position.y < minRow) minRow = pointOfLight.position.y;
                 if (pointOfLight.position.y > maxRow) maxRow = pointOfLight.position.y;
 
-                if (Math.abs(maxRow - minRow) > 8) return;
+                if (Math.abs(maxRow - minRow) > 9) return;
             }
 
 
