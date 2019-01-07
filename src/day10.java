@@ -79,9 +79,6 @@ public class day10 {
         }
     }
 
-
-    // Don't create the baord, just animate points.
-    // Once a line is found, then create a board (should be much smaller) and print it out
     public static class Board {
 
         private final BoardSize boardSize;
@@ -92,14 +89,6 @@ public class day10 {
         public Board(List<PointOfLight> pointsOfLight) {
             this.pointsOfLight = pointsOfLight;
             boardSize = null;
-//            boardSize = determineBoardSize(pointsOfLight);
-//
-//            int maxColumn = boardSize.maxX - boardSize.minX + 1;
-//            int maxRow = boardSize.maxY - boardSize.minY + 1;
-//
-//            grid = new char[maxRow][maxColumn];
-//
-//            populateGrid(pointsOfLight, boardSize);
         }
 
         private void populateGrid(List<PointOfLight> pointsOfLight, BoardSize boardSize) {
@@ -130,26 +119,13 @@ public class day10 {
             return sb.toString();
         }
 
-        // Current implementation sometimes leaves a blank since two points can occupy the same space
-        // Could implement as - erase board, tick points, repaint board
         public void tick() {
 
             for (PointOfLight pointOfLight :
                     pointsOfLight) {
-//                int adjustedCol = pointOfLight.position.x - boardSize.minX;
-//                int adjustedRow = pointOfLight.position.y - boardSize.minY;
-//
-//                grid[adjustedRow][adjustedCol] = '.';
-
                 pointOfLight.tick();
-
-//                adjustedCol = pointOfLight.position.x - boardSize.minX;
-//                adjustedRow = pointOfLight.position.y - boardSize.minY;
-//
-//                grid[adjustedRow][adjustedCol] = '#';
             }
 
-//            scanForLines();
             checkRowsHaveConverged();
         }
 
@@ -178,95 +154,6 @@ public class day10 {
             String message = this.toString();
 
             throw new RuntimeException(message);
-        }
-
-        //TODO - redo this to look for all y values being with 10 of each other.
-        // As soon as two y values are wider than 10 apart then stop
-        private void scanForLines() {
-
-            HashMap<Integer, List<PointOfLight>> pointsPerColumn = new HashMap<>();
-            for (PointOfLight p :
-                    pointsOfLight) {
-                int column = p.position.x;
-
-                if (pointsPerColumn.get(column) != null) {
-                    pointsPerColumn.get(column).add(p);
-                } else {
-                    List<PointOfLight> pointsInThisColumn = new ArrayList<>();
-                    pointsInThisColumn.add(p);
-                    pointsPerColumn.put(column, pointsInThisColumn);
-                }
-            }
-
-            for (Integer column :
-                    pointsPerColumn.keySet()) {
-
-                // if there are 7 or more in the column
-                if ((pointsPerColumn.get(column).size() >= 7) &&
-                        (pointsAreAdjacent(pointsPerColumn.get(column)))) {
-
-                    // extract the y values
-                    // if 7 or more y values are consecutive
-
-
-//                    System.out.println(this.toString());
-
-                    BoardSize finalBoardSize = determineBoardSize(pointsOfLight);
-
-                    int maxColumn = finalBoardSize.maxX - finalBoardSize.minX + 1;
-                    int maxRow = finalBoardSize.maxY - finalBoardSize.minY + 1;
-
-                    grid = new char[maxRow][maxColumn];
-
-                    populateGrid(pointsOfLight, finalBoardSize);
-
-
-                    System.out.println(this.toString());
-
-                    throw new RuntimeException("seconds: " + ticks);
-                }
-            }
-
-
-
-
-            /*
-            for (int row = 0; row < grid.length - 7; row++) {
-                for (int col = 0; col < grid[0].length; col++) {
-
-                    if (grid[row][col] == '#') {
-                        boolean itsALine = true;
-                        for (int i = 0; i < 7; i++) {
-                            if (grid[row + i][col] != '#') {
-                                itsALine = false;
-                                continue;
-                            }
-                        }
-                        if (itsALine) {
-                            System.out.println(this.toString());
-                            throw new RuntimeException();
-                        }
-                    }
-                }
-            }
-            */
-        }
-
-        private boolean pointsAreAdjacent(List<PointOfLight> pointsOfLight) {
-            // run through list of points
-            // track the max and the min
-            // the difference between max and min should be under 10
-            int minRow = Integer.MAX_VALUE;
-            int maxRow = Integer.MIN_VALUE;
-
-            for (PointOfLight pointOfLight :
-                    pointsOfLight) {
-                if (pointOfLight.position.y < minRow) minRow = pointOfLight.position.y;
-                if (pointOfLight.position.y > maxRow) maxRow = pointOfLight.position.y;
-            }
-
-            int delta = maxRow - minRow;
-            return (delta < 7);
         }
 
         public void animate() {
