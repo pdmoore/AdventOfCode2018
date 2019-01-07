@@ -80,6 +80,7 @@ public class day10 {
 
     public static class Board {
 
+        public static final int CHARACTER_HEIGHT = 9;
         private final BoardSize boardSize;
         private final List<PointOfLight> pointsOfLight;
         public char[][] grid;
@@ -137,7 +138,7 @@ public class day10 {
                 if (pointOfLight.position.y < minRow) minRow = pointOfLight.position.y;
                 if (pointOfLight.position.y > maxRow) maxRow = pointOfLight.position.y;
 
-                if (Math.abs(maxRow - minRow) > 9) return;
+                if (Math.abs(maxRow - minRow) > CHARACTER_HEIGHT) return;
             }
 
 
