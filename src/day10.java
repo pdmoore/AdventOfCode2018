@@ -81,14 +81,14 @@ public class day10 {
     public static class Board {
 
         public static final int CHARACTER_HEIGHT = 9;
-        private final BoardSize boardSize;
         private final List<PointOfLight> pointsOfLight;
-        public char[][] grid;
         public int ticks;
+
+        //TODO only needed to print out the final message
+        public char[][] grid;
 
         public Board(List<PointOfLight> pointsOfLight) {
             this.pointsOfLight = pointsOfLight;
-            boardSize = null;
         }
 
         private void populateGrid(List<PointOfLight> pointsOfLight, BoardSize boardSize) {
